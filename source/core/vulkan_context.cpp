@@ -187,7 +187,7 @@ void VulkanContext::SubmitAndWait(std::shared_ptr<CommandBuffer> commandBuffer)
 
 VulkanContext::FrameContext* VulkanContext::GetCurrentFrameContext()
 {
-	return nullptr;
+	return &m_frameContext[m_currentFrameIndex];
 }
 
 uint32_t VulkanContext::FindMemoryType(const VkMemoryRequirements& requirements, VkMemoryPropertyFlags prorerties)
