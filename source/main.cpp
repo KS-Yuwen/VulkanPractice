@@ -1,9 +1,19 @@
 ﻿#include <Windows.h>
 #define GLFW_INCULDE_VULKAN
 #include <GLFW/glfw3.h>
+#include <iostream>
+#include <filesystem>
+#include <array>
+
 #include "core/vulkan_context.h"
-#include "triangle_app.h"
 #include "core/glfw_surface_provider.h"
+#include "core/asset_path.h"
+
+#include "glm.hpp"
+
+#include "triangle_app.h"
+
+namespace fs = std::filesystem;
 
 int APIENTRY WinMain(
 	_In_ HINSTANCE hInstance,
@@ -11,6 +21,17 @@ int APIENTRY WinMain(
 	_In_ LPSTR lpCmdLine,
 	_In_ int nCmdShow)
 {
+	wchar_t exePath[MAX_PATH];
+	GetModuleFileNameW(
+		nullptr,
+		exePath,
+		MAX_PATH);
+	fs::path exeDir = fs::path(exePath).parent_path();
+	SetCurrentDirectory(exeDir.c_str());
+
+	fs::path assetDir = exeDir / "../../assets";
+	SetAssetRootPath(assetDir);
+
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 

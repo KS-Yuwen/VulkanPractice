@@ -103,7 +103,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_FORCE_RADIANS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_FORCE_RADIANS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -131,23 +131,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\core\asset_path.cpp" />
+    <ClCompile Include="source\core\buffer_resource.cpp" />
     <ClCompile Include="source\core\command_buffer.cpp" />
     <ClCompile Include="source\core\glfw_surface_provider.cpp" />
+    <ClCompile Include="source\core\graphics_pipeline_builder.cpp" />
     <ClCompile Include="source\core\image_barrier.cpp" />
+    <ClCompile Include="source\core\shader_loader.cpp" />
     <ClCompile Include="source\core\swapchain.cpp" />
     <ClCompile Include="source\core\vulkan_context.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\triangle_app.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\core\asset_path.h" />
+    <ClInclude Include="source\core\buffer_resource.h" />
     <ClInclude Include="source\core\command_buffer.h" />
     <ClInclude Include="source\core\glfw_surface_provider.h" />
+    <ClInclude Include="source\core\gpu_resource_base.h" />
+    <ClInclude Include="source\core\graphics_pipeline_builder.h" />
     <ClInclude Include="source\core\image_barrier.h" />
     <ClInclude Include="source\core\sample_app.h" />
+    <ClInclude Include="source\core\shader_loader.h" />
     <ClInclude Include="source\core\surface_provider.h" />
     <ClInclude Include="source\core\swapchain.h" />
     <ClInclude Include="source\core\vulkan_context.h" />
     <ClInclude Include="source\triangle_app.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\triangle\triangle.frag" />
+    <None Include="assets\shaders\triangle\triangle.frag.spv" />
+    <None Include="assets\shaders\triangle\triangle.vert" />
+    <None Include="assets\shaders\triangle\triangle.vert.spv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
