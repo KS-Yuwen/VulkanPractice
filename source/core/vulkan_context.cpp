@@ -190,9 +190,20 @@ VulkanContext::FrameContext* VulkanContext::GetCurrentFrameContext()
 	return &m_frameContext[m_currentFrameIndex];
 }
 
-uint32_t VulkanContext::FindMemoryType(const VkMemoryRequirements& requirements, VkMemoryPropertyFlags prorerties)
+uint32_t VulkanContext::FindMemoryType(const VkMemoryRequirements& requirements, VkMemoryPropertyFlags prorerties) const
 {
-	return 0;
+	for (uint32_t i = 0; i < m_memoryProperties.memoryTypeCount; i++)
+	{
+		const bool isTypeCompatible = (requirements.memoryTypeBits & (1 << i)) != 0;
+		const bool hasDesiredProperties = (m_memoryProperties.memoryTypes[i].propertyFlags & prorerties) == prorerties;
+
+		if (isTypeCompatible && hasDesiredProperties)
+		{	// メモリプロパティを満たし、memoryTypeBitsに含まれている
+			return i;
+		}
+	}
+	
+	throw std::runtime_error("Failed to find suitable memory type");
 }
 
 void VulkanContext::SetDebugObjectName(void* objectHandle, VkObjectType type, const char* name)

@@ -73,7 +73,7 @@ public:
 	std::unique_ptr<Swapchain>& GetSwapchain() { return m_swapchain; }
 
 	// メモリタイプの取得
-	uint32_t FindMemoryType(const VkMemoryRequirements& requirements, VkMemoryPropertyFlags prorerties);
+	uint32_t FindMemoryType(const VkMemoryRequirements& requirements, VkMemoryPropertyFlags prorerties) const;
 
 	// Function Callback(s)
 	std::function<void(std::vector<const char*>&)> GetWindowSystemExtensions;

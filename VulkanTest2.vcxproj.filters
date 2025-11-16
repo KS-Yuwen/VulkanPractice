@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{7f13a93e-476d-4fc0-8bdf-38e30a84bb55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -34,6 +37,18 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\core\image_barrier.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\buffer_resource.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\asset_path.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\shader_loader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\graphics_pipeline_builder.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,5 +77,34 @@
     <ClInclude Include="source\core\image_barrier.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\core\buffer_resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\gpu_resource_base.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\asset_path.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\shader_loader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\graphics_pipeline_builder.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shader\triangle.vert">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="assets\shader\triangle.frag">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="assets\shader\triangle.frag.spv">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="assets\shader\triangle.vert.spv">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
