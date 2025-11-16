@@ -13,8 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{7f13a93e-476d-4fc0-8bdf-38e30a84bb55}</UniqueIdentifier>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{0ec18dd3-1195-4649-af70-b6ea31a45a60}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -94,17 +94,17 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shader\triangle.vert">
-      <Filter>Shader</Filter>
+    <None Include="assets\shaders\triangle\triangle.frag">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shader\triangle.frag">
-      <Filter>Shader</Filter>
+    <None Include="assets\shaders\triangle\triangle.frag.spv">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shader\triangle.frag.spv">
-      <Filter>Shader</Filter>
+    <None Include="assets\shaders\triangle\triangle.vert">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shader\triangle.vert.spv">
-      <Filter>Shader</Filter>
+    <None Include="assets\shaders\triangle\triangle.vert.spv">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

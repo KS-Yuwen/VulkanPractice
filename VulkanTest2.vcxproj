@@ -159,10 +159,10 @@
     <ClInclude Include="source\triangle_app.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shader\triangle.frag" />
-    <None Include="assets\shader\triangle.frag.spv" />
-    <None Include="assets\shader\triangle.vert" />
-    <None Include="assets\shader\triangle.vert.spv" />
+    <None Include="assets\shaders\triangle\triangle.frag" />
+    <None Include="assets\shaders\triangle\triangle.frag.spv" />
+    <None Include="assets\shaders\triangle\triangle.vert" />
+    <None Include="assets\shaders\triangle\triangle.vert.spv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
