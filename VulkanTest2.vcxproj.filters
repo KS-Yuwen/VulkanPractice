@@ -16,6 +16,12 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{0ec18dd3-1195-4649-af70-b6ea31a45a60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\triangle">
+      <UniqueIdentifier>{11142cdc-fc98-4e2c-bd0d-5e56527ed80a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\cube">
+      <UniqueIdentifier>{3457cd5f-3977-4a9c-bd3c-723d70c02cbe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -49,6 +55,15 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\core\graphics_pipeline_builder.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\simplecube_app.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\image_resource.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\resource_uploader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,19 +107,34 @@
     <ClInclude Include="source\core\graphics_pipeline_builder.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\simplecube_app.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\image_resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\resource_uploader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\triangle\triangle.frag">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\triangle</Filter>
     </None>
     <None Include="assets\shaders\triangle\triangle.frag.spv">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\triangle</Filter>
     </None>
     <None Include="assets\shaders\triangle\triangle.vert">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\triangle</Filter>
     </None>
     <None Include="assets\shaders\triangle\triangle.vert.spv">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\triangle</Filter>
+    </None>
+    <None Include="assets\shaders\cube\cube.frag">
+      <Filter>Shaders\cube</Filter>
+    </None>
+    <None Include="assets\shaders\cube\cube.vert">
+      <Filter>Shaders\cube</Filter>
     </None>
   </ItemGroup>
 </Project>

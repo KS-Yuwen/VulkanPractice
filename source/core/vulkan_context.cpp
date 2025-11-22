@@ -117,11 +117,25 @@ std::shared_ptr<CommandBuffer> VulkanContext::CreateCommandBuffer()
 
 VkDescriptorSet VulkanContext::AllocateDescriptorSet(VkDescriptorSetLayout layout)
 {
-	return VkDescriptorSet();
+	VkDescriptorSetAllocateInfo allocInfo{
+		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+		.descriptorPool = m_descriptorPool,
+		.descriptorSetCount = 1,
+		.pSetLayouts = &layout,
+	};
+
+	VkDescriptorSet descriptorSet;
+	if (vkAllocateDescriptorSets(m_vkDevice, &allocInfo, &descriptorSet) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to allocate descriptor set!");
+	}
+
+	return descriptorSet;
 }
 
 void VulkanContext::FreeDescriptorSet(VkDescriptorSet descriptorSet)
 {
+	vkFreeDescriptorSets(m_vkDevice, m_descriptorPool, 1, &descriptorSet);
 }
 
 VkResult VulkanContext::AcquireNextImage()
@@ -433,6 +447,25 @@ void VulkanContext::CreateCommandPool()
 
 void VulkanContext::CreateDescriptorPool()
 {
+	std::vector<VkDescriptorPoolSize> poolSizes = {
+	{
+		.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+		.descriptorCount = 4096
+	},
+	};
+
+	VkDescriptorPoolCreateInfo poolInfo{
+		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+		.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT,
+		.maxSets = 4096,
+		.poolSizeCount = uint32_t(poolSizes.size()),
+		.pPoolSizes = poolSizes.data(),
+	};
+
+	if (vkCreateDescriptorPool(m_vkDevice, &poolInfo, nullptr, &m_descriptorPool) != VK_SUCCESS)
+	{
+		throw std::runtime_error("failed to create descriptor pool!");
+	}
 }
 
 void VulkanContext::CreateFrameContexts()

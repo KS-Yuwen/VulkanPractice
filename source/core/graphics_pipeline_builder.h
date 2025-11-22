@@ -37,7 +37,7 @@ public:
 	GraphicsPipelineBuilder& UseRenderPass(VkRenderPass renderPass, uint32_t subpass);
 
 	// DynamicRenderingを使用する場合の設定
-	GraphicsPipelineBuilder& UserDynamicRendering(VkFormat colorFormat, VkFormat depthFormat = VK_FORMAT_UNDEFINED);
+	GraphicsPipelineBuilder& UseDynamicRendering(VkFormat colorFormat, VkFormat depthFormat = VK_FORMAT_UNDEFINED);
 
 	// パイプライン作成
 	VkPipeline Build();
