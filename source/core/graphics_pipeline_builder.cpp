@@ -162,7 +162,7 @@ GraphicsPipelineBuilder& GraphicsPipelineBuilder::UseRenderPass(VkRenderPass ren
 	return *this;
 }
 
-GraphicsPipelineBuilder& GraphicsPipelineBuilder::UserDynamicRendering(VkFormat colorFormat, VkFormat depthFormat)
+GraphicsPipelineBuilder& GraphicsPipelineBuilder::UseDynamicRendering(VkFormat colorFormat, VkFormat depthFormat)
 {
 	m_useRenderPass = false;
 	m_colorFormat = colorFormat;

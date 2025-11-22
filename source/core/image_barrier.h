@@ -18,4 +18,10 @@ struct ImageLayoutTransition
 
 	// 描画先からPresentSrcの状態レイアウトへ
 	static ImageLayoutTransition FromColorToPresent();
+
+	// 初期状態から転送先レイアウトへ
+	static ImageLayoutTransition FromUndefToTransferDst();
+
+	// 転送先レイアウトから転送元レイアウトへ
+	static ImageLayoutTransition FromTransferDstToTransferSrc();
 };

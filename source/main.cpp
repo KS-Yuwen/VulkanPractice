@@ -12,8 +12,46 @@
 #include "glm.hpp"
 
 #include "triangle_app.h"
+#include "simplecube_app.h"
 
 namespace fs = std::filesystem;
+
+void triangle(GLFWwindow* window)
+{
+	// アプリケーションの初期化
+	TriangleApp theApp{};
+	theApp.OnInitialize();
+
+	// メッセージループ処理
+	while (glfwWindowShouldClose(window) == GLFW_FALSE)
+	{
+		glfwPollEvents();
+
+		// 描画処理
+		theApp.OnDrawFrame();
+	}
+
+	// 終了処理
+	theApp.OnCleanup();
+}
+
+void simpleCube(GLFWwindow* window)
+{
+	SimpleCubeApp theApp{};
+	theApp.OnInitialize();
+
+	// メッセージループ処理
+	while (glfwWindowShouldClose(window) == GLFW_FALSE)
+	{
+		glfwPollEvents();
+
+		// 描画処理
+		theApp.OnDrawFrame();
+	}
+
+	// 終了処理
+	theApp.OnCleanup();
+}
 
 int APIENTRY WinMain(
 	_In_ HINSTANCE hInstance,
@@ -44,7 +82,7 @@ int APIENTRY WinMain(
 	auto window = glfwCreateWindow(
 		1280,
 		720,
-		"Triangle",
+		"Vulkan Practice",
 		nullptr,
 		nullptr);
 	GLFWSurfaceProvider surfaceProvider(window);
@@ -59,24 +97,13 @@ int APIENTRY WinMain(
 			extensionList.insert(extensionList.end(), extensions, extensions + extCount);
 		}
 	};
-	vulkanCtx.Initialize("Triangle", &surfaceProvider);
+	vulkanCtx.Initialize("Vulkan Practice", &surfaceProvider);
 	vulkanCtx.RecreateSwapchain();
 
-	// アプリケーションの初期化
-	TriangleApp theApp{};
-	theApp.OnInitialize();
-
-	// メッセージループ処理
-	while (glfwWindowShouldClose(window) == GLFW_FALSE)
-	{
-		glfwPollEvents();
-
-		// 描画処理
-		theApp.OnDrawFrame();
-	}
+	//triangle(window);
+	simpleCube(window);
 
 	// 終了処理
-	theApp.OnCleanup();
 	vulkanCtx.Cleanup();
 
 	glfwDestroyWindow(window);

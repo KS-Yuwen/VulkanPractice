@@ -234,7 +234,7 @@ void TriangleApp::InitializeGraphicsPileline()
 	builder.SetPipelineLayout(m_pipelineLayout);
 
 	auto colorFormat = swapchain->GetFormat().format;
-	builder.UserDynamicRendering(colorFormat);
+	builder.UseDynamicRendering(colorFormat);
 
 	m_pipeline = builder.Build();
 

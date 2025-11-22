@@ -72,3 +72,70 @@ public:
 		return buffer;
 	}
 };
+
+class IndexBuffer : public BufferResource<IndexBuffer>
+{
+    friend class GpuResourceBase<IndexBuffer>;
+private:
+    IndexBuffer() = default;
+public:
+    virtual ~IndexBuffer() = default;
+
+    virtual void* Map() override;
+    virtual void Unmap() override;
+
+    bool Initialize(VkDeviceSize size, VkMemoryPropertyFlags memProps);
+
+    // Create, Initialize を1度で処理するための作成関数
+    static std::shared_ptr<IndexBuffer> Create(VkDeviceSize size, VkMemoryPropertyFlags memProps)
+    {
+        auto buffer = GpuResourceBase::Create();
+        if (!buffer->Initialize(size, memProps)) { return nullptr; }
+        return buffer;
+    }
+};
+
+class UniformBuffer : public BufferResource<UniformBuffer>
+{
+    friend class GpuResourceBase<UniformBuffer>;
+public:
+    UniformBuffer() = default;
+    virtual ~UniformBuffer() = default;
+
+    virtual void* Map() override;
+    virtual void Unmap() override;
+
+    bool Initialize(VkDeviceSize size);
+
+    // Create, Initialize を1度で処理するための作成関数
+    static std::shared_ptr<UniformBuffer> Create(VkDeviceSize size)
+    {
+        auto buffer = GpuResourceBase::Create();
+        if (!buffer->Initialize(size)) { return nullptr; }
+        return buffer;
+    }
+};
+
+// ステージングバッファ
+class StagingBuffer : public BufferResource<StagingBuffer>
+{
+    friend class GpuResourceBase<StagingBuffer>;
+private:
+    StagingBuffer() = default;
+
+public:
+    virtual ~StagingBuffer() = default;
+
+    virtual void* Map() override;
+    virtual void Unmap() override;
+
+    bool Initialize(VkDeviceSize size);
+
+    // Create, Initialize を1度で処理するための作成関数
+    static std::shared_ptr<StagingBuffer> Create(VkDeviceSize size)
+    {
+        auto buffer = GpuResourceBase::Create();
+        if (!buffer->Initialize(size)) { return nullptr; }
+        return buffer;
+    }
+};

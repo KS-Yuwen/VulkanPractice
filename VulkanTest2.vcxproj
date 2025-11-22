@@ -137,10 +137,13 @@
     <ClCompile Include="source\core\glfw_surface_provider.cpp" />
     <ClCompile Include="source\core\graphics_pipeline_builder.cpp" />
     <ClCompile Include="source\core\image_barrier.cpp" />
+    <ClCompile Include="source\core\image_resource.cpp" />
+    <ClCompile Include="source\core\resource_uploader.cpp" />
     <ClCompile Include="source\core\shader_loader.cpp" />
     <ClCompile Include="source\core\swapchain.cpp" />
     <ClCompile Include="source\core\vulkan_context.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\simplecube_app.cpp" />
     <ClCompile Include="source\triangle_app.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -151,14 +154,19 @@
     <ClInclude Include="source\core\gpu_resource_base.h" />
     <ClInclude Include="source\core\graphics_pipeline_builder.h" />
     <ClInclude Include="source\core\image_barrier.h" />
+    <ClInclude Include="source\core\image_resource.h" />
+    <ClInclude Include="source\core\resource_uploader.h" />
     <ClInclude Include="source\core\sample_app.h" />
     <ClInclude Include="source\core\shader_loader.h" />
     <ClInclude Include="source\core\surface_provider.h" />
     <ClInclude Include="source\core\swapchain.h" />
     <ClInclude Include="source\core\vulkan_context.h" />
+    <ClInclude Include="source\simplecube_app.h" />
     <ClInclude Include="source\triangle_app.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\cube\cube.frag" />
+    <None Include="assets\shaders\cube\cube.vert" />
     <None Include="assets\shaders\triangle\triangle.frag" />
     <None Include="assets\shaders\triangle\triangle.frag.spv" />
     <None Include="assets\shaders\triangle\triangle.vert" />
