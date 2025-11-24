@@ -103,7 +103,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_FORCE_RADIANS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm;E:\stb</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_FORCE_RADIANS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm;E:\stb</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -139,11 +139,14 @@
     <ClCompile Include="source\core\image_barrier.cpp" />
     <ClCompile Include="source\core\image_resource.cpp" />
     <ClCompile Include="source\core\resource_uploader.cpp" />
+    <ClCompile Include="source\core\sampler.cpp" />
     <ClCompile Include="source\core\shader_loader.cpp" />
     <ClCompile Include="source\core\swapchain.cpp" />
+    <ClCompile Include="source\core\texture_loader.cpp" />
     <ClCompile Include="source\core\vulkan_context.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\simplecube_app.cpp" />
+    <ClCompile Include="source\texture_app.cpp" />
     <ClCompile Include="source\triangle_app.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,21 +159,24 @@
     <ClInclude Include="source\core\image_barrier.h" />
     <ClInclude Include="source\core\image_resource.h" />
     <ClInclude Include="source\core\resource_uploader.h" />
+    <ClInclude Include="source\core\sampler.h" />
     <ClInclude Include="source\core\sample_app.h" />
     <ClInclude Include="source\core\shader_loader.h" />
     <ClInclude Include="source\core\surface_provider.h" />
     <ClInclude Include="source\core\swapchain.h" />
+    <ClInclude Include="source\core\texture_loader.h" />
     <ClInclude Include="source\core\vulkan_context.h" />
     <ClInclude Include="source\simplecube_app.h" />
+    <ClInclude Include="source\texture_app.h" />
     <ClInclude Include="source\triangle_app.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\cube\cube.frag" />
     <None Include="assets\shaders\cube\cube.vert" />
+    <None Include="assets\shaders\texture\texture.frag" />
+    <None Include="assets\shaders\texture\texture.vert" />
     <None Include="assets\shaders\triangle\triangle.frag" />
-    <None Include="assets\shaders\triangle\triangle.frag.spv" />
     <None Include="assets\shaders\triangle\triangle.vert" />
-    <None Include="assets\shaders\triangle\triangle.vert.spv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

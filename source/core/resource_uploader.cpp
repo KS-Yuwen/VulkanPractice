@@ -53,6 +53,20 @@ bool ResourceUploader::UploadBuffer(IBufferResource* target, const void* pData, 
     return true;
 }
 
+bool ResourceUploader::UploadImage(std::shared_ptr<IImageResource> target, loader::TextureUploadRequest& request)
+{
+    auto& entry = m_transferImageEntries.emplace_back();
+    entry.destinationTexture = target;
+    entry.stagingBuffer = request.staging;
+    entry.copyRegions = request.copyRegions;
+    entry.genMipmaps = target->GetMipmapCount() != request.copyRegions.size();
+    entry.dstAccessMask = request.nextAccessFlags;
+    entry.dstImageLayout = request.nextLayout;
+    entry.dstStageFlags = request.nextStageFlags;
+    
+    return true;
+}
+
 void ResourceUploader::SubmitAndWait()
 {
     if (m_transferEntries.empty() && m_transferImageEntries.empty())
@@ -204,7 +218,7 @@ void ResourceUploader::SubmitAndWait()
     vkWaitForFences(device, 1, &m_transferFence, VK_TRUE, UINT64_MAX);
 
     m_transferEntries.clear();
-    m_transferImageEntries.clear();
+    m_transferImageEntries.clear(); // 後始末
     commandBuffer.reset();
 }
 

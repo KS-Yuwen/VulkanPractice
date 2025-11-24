@@ -10,7 +10,7 @@ std::filesystem::path GetAssetRootPath();
 enum class AssetType
 {
 	Shader = 0,
-	Txture,
+	Texture,
 	Model,
 	AssetTypeMax,
 };
