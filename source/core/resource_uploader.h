@@ -6,7 +6,7 @@
 #include "command_buffer.h"
 #include "buffer_resource.h"
 #include "image_resource.h"
-//#include "texture_loader.h"
+#include "texture_loader.h"
 
 class ResourceUploader
 {
@@ -18,6 +18,8 @@ public:
     void Cleanup();
 
     bool UploadBuffer(IBufferResource* target, const void* pData, size_t size, VkAccessFlags nextAccessMask);
+
+    bool UploadImage(std::shared_ptr<IImageResource> target, loader::TextureUploadRequest& request);
 
     // 登録されている転送処理をまとめて実行する
     // 同期実行を行い、全ての転送処理が完了後に処理が戻る

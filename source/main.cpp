@@ -13,6 +13,7 @@
 
 #include "triangle_app.h"
 #include "simplecube_app.h"
+#include "texture_app.h"
 
 namespace fs = std::filesystem;
 
@@ -51,6 +52,24 @@ void simpleCube(GLFWwindow* window)
 
 	// 終了処理
 	theApp.OnCleanup();
+}
+
+void texture(GLFWwindow* window)
+{
+	TextureApp theApp{};
+	theApp.OnInitialize();
+	// メッセージループ処理
+	while (glfwWindowShouldClose(window) == GLFW_FALSE)
+	{
+		glfwPollEvents();
+
+		// 描画処理
+		theApp.OnDrawFrame();
+	}
+
+	// 終了処理
+	theApp.OnCleanup();
+
 }
 
 int APIENTRY WinMain(
@@ -101,7 +120,8 @@ int APIENTRY WinMain(
 	vulkanCtx.RecreateSwapchain();
 
 	//triangle(window);
-	simpleCube(window);
+	//simpleCube(window);
+	texture(window);
 
 	// 終了処理
 	vulkanCtx.Cleanup();

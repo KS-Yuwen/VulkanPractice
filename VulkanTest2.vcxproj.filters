@@ -22,6 +22,9 @@
     <Filter Include="Shaders\cube">
       <UniqueIdentifier>{3457cd5f-3977-4a9c-bd3c-723d70c02cbe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\texture">
+      <UniqueIdentifier>{b14adea1-af20-4752-9674-285551f03ee8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -64,6 +67,15 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\core\resource_uploader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\texture_loader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\sampler.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\texture_app.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -116,18 +128,21 @@
     <ClInclude Include="source\core\resource_uploader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\core\texture_loader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\sampler.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\texture_app.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\triangle\triangle.frag">
       <Filter>Shaders\triangle</Filter>
     </None>
-    <None Include="assets\shaders\triangle\triangle.frag.spv">
-      <Filter>Shaders\triangle</Filter>
-    </None>
     <None Include="assets\shaders\triangle\triangle.vert">
-      <Filter>Shaders\triangle</Filter>
-    </None>
-    <None Include="assets\shaders\triangle\triangle.vert.spv">
       <Filter>Shaders\triangle</Filter>
     </None>
     <None Include="assets\shaders\cube\cube.frag">
@@ -135,6 +150,12 @@
     </None>
     <None Include="assets\shaders\cube\cube.vert">
       <Filter>Shaders\cube</Filter>
+    </None>
+    <None Include="assets\shaders\texture\texture.frag">
+      <Filter>Shaders\texture</Filter>
+    </None>
+    <None Include="assets\shaders\texture\texture.vert">
+      <Filter>Shaders\texture</Filter>
     </None>
   </ItemGroup>
 </Project>
