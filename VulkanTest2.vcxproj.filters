@@ -37,6 +37,9 @@
     <Filter Include="ソース ファイル\Render">
       <UniqueIdentifier>{a317a01f-06e4-4950-a291-047a5980a802}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\basic_pbr">
+      <UniqueIdentifier>{1dc30765-a140-498c-a126-22f679fe5508}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\asset_path.cpp">
@@ -91,6 +94,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\Render\model_loader.cpp">
+      <Filter>ソース ファイル\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\basic_pbr_render.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -158,6 +164,9 @@
     <ClInclude Include="source\Render\model_loader.h">
       <Filter>ヘッダー ファイル\Render</Filter>
     </ClInclude>
+    <ClInclude Include="source\Render\basic_pbr_render.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\triangle\triangle.frag">
@@ -177,6 +186,12 @@
     </None>
     <None Include="assets\shaders\texture\texture.vert">
       <Filter>Shaders\texture</Filter>
+    </None>
+    <None Include="assets\shaders\basic_pbr\basic_pbr.vert">
+      <Filter>Shaders\basic_pbr</Filter>
+    </None>
+    <None Include="assets\shaders\basic_pbr\basic_pbr.frag">
+      <Filter>Shaders\basic_pbr</Filter>
     </None>
   </ItemGroup>
 </Project>

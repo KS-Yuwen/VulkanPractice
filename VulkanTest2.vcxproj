@@ -145,6 +145,7 @@
     <ClCompile Include="source\core\texture_loader.cpp" />
     <ClCompile Include="source\core\vulkan_context.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\Render\basic_pbr_render.cpp" />
     <ClCompile Include="source\Render\model_loader.cpp" />
     <ClCompile Include="source\simplecube_app.cpp" />
     <ClCompile Include="source\texture_app.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="source\core\swapchain.h" />
     <ClInclude Include="source\core\texture_loader.h" />
     <ClInclude Include="source\core\vulkan_context.h" />
+    <ClInclude Include="source\Render\basic_pbr_render.h" />
     <ClInclude Include="source\Render\model_data.h" />
     <ClInclude Include="source\Render\model_loader.h" />
     <ClInclude Include="source\simplecube_app.h" />
@@ -174,6 +176,8 @@
     <ClInclude Include="source\triangle_app.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\basic_pbr\basic_pbr.frag" />
+    <None Include="assets\shaders\basic_pbr\basic_pbr.vert" />
     <None Include="assets\shaders\cube\cube.frag" />
     <None Include="assets\shaders\cube\cube.vert" />
     <None Include="assets\shaders\texture\texture.frag" />
