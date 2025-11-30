@@ -25,117 +25,138 @@
     <Filter Include="Shaders\texture">
       <UniqueIdentifier>{b14adea1-af20-4752-9674-285551f03ee8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\core">
+      <UniqueIdentifier>{4cac0e30-8b41-47ef-84a9-410b8348367a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Render">
+      <UniqueIdentifier>{3e1dae9b-cde2-437a-9c87-253645a37871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\core">
+      <UniqueIdentifier>{5fbda7a7-4f12-45a2-9ab8-8e188d85a512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Render">
+      <UniqueIdentifier>{a317a01f-06e4-4950-a291-047a5980a802}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\vulkan_context.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\swapchain.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\glfw_surface_provider.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\command_buffer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\triangle_app.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\image_barrier.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="source\core\asset_path.cpp">
+      <Filter>ソース ファイル\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\buffer_resource.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\core</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\asset_path.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="source\core\command_buffer.cpp">
+      <Filter>ソース ファイル\core</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\shader_loader.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="source\core\glfw_surface_provider.cpp">
+      <Filter>ソース ファイル\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\graphics_pipeline_builder.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\image_barrier.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\image_resource.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\resource_uploader.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\sampler.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\shader_loader.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\swapchain.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\texture_loader.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\vulkan_context.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\triangle_app.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\simplecube_app.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\image_resource.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\resource_uploader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\texture_loader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\sampler.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\texture_app.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\model_loader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\core\asset_path.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\buffer_resource.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\command_buffer.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\glfw_surface_provider.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\gpu_resource_base.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\graphics_pipeline_builder.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\image_barrier.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\image_resource.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\resource_uploader.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
     <ClInclude Include="source\core\sample_app.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\sampler.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\shader_loader.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\surface_provider.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\swapchain.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\texture_loader.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\vulkan_context.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\simplecube_app.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="source\triangle_app.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\core\vulkan_context.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\swapchain.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\surface_provider.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\glfw_surface_provider.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\command_buffer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\image_barrier.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\buffer_resource.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\gpu_resource_base.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\asset_path.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\shader_loader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\graphics_pipeline_builder.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\simplecube_app.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\image_resource.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\resource_uploader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\texture_loader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="source\core\sampler.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="source\texture_app.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\model_data.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\model_loader.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
