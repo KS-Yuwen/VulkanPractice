@@ -97,6 +97,15 @@
       <Filter>ソース ファイル\Render</Filter>
     </ClCompile>
     <ClCompile Include="source\Render\basic_pbr_render.cpp">
+      <Filter>ソース ファイル\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\model_resource.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\draw_object.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\drawmodel_app.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -166,6 +175,15 @@
     </ClInclude>
     <ClInclude Include="source\Render\basic_pbr_render.h">
       <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\model_resource.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\draw_object.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="source\drawmodel_app.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

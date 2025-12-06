@@ -21,4 +21,10 @@ namespace loader
 
 	std::tuple<std::shared_ptr<Texture2D>, TextureUploadRequest>
 		LoadTexture2DFromFile(const std::filesystem::path& filePath, bool generateMips = true);
+
+	std::tuple<std::shared_ptr<Texture2D>, TextureUploadRequest>
+		LoadTexture2DFromMemory(const void* imageData, size_t size, bool generateMips = true);
+
+	std::tuple<std::shared_ptr<StorageImage2D>, TextureUploadRequest>
+		LoadStorageImage2DFromFile(const std::filesystem::path& filePath, bool generateMips = false);
 }

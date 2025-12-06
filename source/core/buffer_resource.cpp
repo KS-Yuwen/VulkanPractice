@@ -206,8 +206,77 @@ void StagingBuffer::Unmap()
     vkUnmapMemory(device, m_memory);
 }
 
+void* DynamicUniformBuffer::Map()
+{
+    auto& vulkanCtx = VulkanContext::Get();
+    VkDevice device = vulkanCtx.GetVkDevice();
+    auto frameIndex = vulkanCtx.GetCurrentFrameIndex();
+    auto offset = frameIndex * m_blockSize;
+
+    void* mapped = nullptr;
+	vkMapMemory(device, m_memory, offset, m_blockSize, 0, &mapped);
+    return mapped;
+}
+
+void DynamicUniformBuffer::Unmap()
+{
+    auto& vulkanCtx = VulkanContext::Get();
+    VkDevice device = vulkanCtx.GetVkDevice();
+    auto frameIndex = vulkanCtx.GetCurrentFrameIndex();
+    auto offset = frameIndex * m_blockSize;
+
+    VkMappedMemoryRange mappedRange{
+        .sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
+        .memory = m_memory,
+        .offset = offset,
+        .size = m_blockSize,
+    };
+	vkFlushMappedMemoryRanges(device, 1, &mappedRange);
+    vkUnmapMemory(device, m_memory);
+}
+
+bool DynamicUniformBuffer::Initialize(VkDeviceSize size)
+{
+    auto& vulkanCtx = VulkanContext::Get();
+    auto uboOffsetAlignment = vulkanCtx.MinUniformOffsetAlignment();
+    auto nonCoherntAtomSize = vulkanCtx.NonCoherentAtomSize();
+    auto alignSize = std::max(uboOffsetAlignment, nonCoherntAtomSize);
+
+    // バッファ開始アライメントとサイズのアライメント要件を考慮して、1ブロックサイズを計算
+    m_blockSize = (size + alignSize - 1ULL) & ~(alignSize - 1ULL);
+    VkDeviceSize bufferSize = m_blockSize * vulkanCtx.MaxInflightFrames;
+    VkBufferCreateInfo bufferInfo{
+        .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+        .size = bufferSize,
+        .usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+        .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
+    };
+    VkMemoryPropertyFlags memProps = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+    SetAccessFlags(VK_ACCESS_SHADER_READ_BIT);
+    return CreateBuffer(bufferInfo, memProps);
+
+}
+
+VkDescriptorBufferInfo DynamicUniformBuffer::GetDescriptorInfo() const
+{
+    return VkDescriptorBufferInfo{
+        .buffer = m_buffer,
+        .offset = 0,
+        .range = m_blockSize,
+    };
+}
+
+uint32_t DynamicUniformBuffer::GetCurrentOffset() const
+{
+    auto& vulkanCtx = VulkanContext::Get();
+    VkDeviceSize offset = m_blockSize * vulkanCtx.GetCurrentFrameIndex();
+    return uint32_t(offset);
+}
+
+
 // 各クラスのテンプレートをインスタンス化
 template class BufferResource<VertexBuffer>;
 template class BufferResource<IndexBuffer>;
 template class BufferResource<UniformBuffer>;
 template class BufferResource<StagingBuffer>;
+template class BufferResource<DynamicUniformBuffer>;

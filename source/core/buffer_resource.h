@@ -139,3 +139,31 @@ public:
         return buffer;
     }
 };
+
+// ダイナミックユニフォームバッファ
+class DynamicUniformBuffer : public BufferResource<DynamicUniformBuffer>
+{
+	friend class GpuResourceBase<DynamicUniformBuffer>;
+public:
+	DynamicUniformBuffer() = default;
+	virtual ~DynamicUniformBuffer() = default;
+
+	virtual void* Map() override;
+	virtual void Unmap() override;
+
+	bool Initialize(VkDeviceSize size);
+
+	// Create, Initializeを1度で処理するための作成関数
+	static std::shared_ptr<DynamicUniformBuffer> Create(VkDeviceSize size)
+	{
+		auto buffer = GpuResourceBase::Create();
+		if (!buffer->Initialize(size)) { return nullptr; }
+		return buffer;
+	}
+
+	VkDescriptorBufferInfo GetDescriptorInfo() const override;
+	uint32_t GetCurrentOffset() const;
+
+private:
+	uint32_t m_blockSize = 0;
+};

@@ -17,19 +17,219 @@ namespace render
 
 	void BasicPBRRender::Cleanup()
 	{
+		auto& vulkanCtx = VulkanContext::Get();
+		auto device = vulkanCtx.GetVkDevice();
+
+		if (m_depthBuffer)
+		{
+			m_depthBuffer->Cleanup();
+		}
+		m_depthBuffer.reset();
+
+		for (auto [key, value] : m_pipelines)
+		{
+			vkDestroyPipeline(device, value, nullptr);
+		}
+		m_pipelines.clear();
+
+		if (m_layouts.sceneLayout != VK_NULL_HANDLE)
+		{
+			vkDestroyDescriptorSetLayout(device, m_layouts.sceneLayout, nullptr);
+		}
+		if (m_layouts.materialLayout != VK_NULL_HANDLE)
+		{
+			vkDestroyDescriptorSetLayout(device, m_layouts.materialLayout, nullptr);
+		}
+		if (m_layouts.pipeline != VK_NULL_HANDLE)
+		{
+			vkDestroyPipelineLayout(device, m_layouts.pipeline, nullptr);
+		}
+		m_layouts.materialLayout = VK_NULL_HANDLE;
+		m_layouts.sceneLayout = VK_NULL_HANDLE;
+		m_layouts.pipeline = VK_NULL_HANDLE;
 	}
+
 	void BasicPBRRender::SetSceneDescriptor(VkDescriptorSet set, uint32_t dynamicOffset)
 	{
+		m_scene.descriptorSet = set;
+		m_scene.dynamicOffset = dynamicOffset;
 	}
 	void BasicPBRRender::BeginScene(std::shared_ptr<CommandBuffer> commandBuffer)
 	{
+		auto& vulkanCtx = VulkanContext::Get();
+		auto& swapchain = vulkanCtx.GetSwapchain();
+		auto device = vulkanCtx.GetVkDevice();
+		auto extent = swapchain->GetExtent();
+
+		// 描画前：UNDEFINED → COLOR_ATTACHMENT_OPTIMAL
+		// VK_ATTACHMENT_LOAD_OP_CLEARを指定のため、常にUNDEFINED指定遷移で問題なし
+		VkImageSubresourceRange range{
+			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+			.baseMipLevel = 0, .levelCount = 1,
+			.baseArrayLayer = 0, .layerCount = 1,
+		};
+		commandBuffer->TransitionLayout(
+			swapchain->GetCurrentImage(), range,
+			ImageLayoutTransition::FromUndefinedToColorAttachment()
+		);
+
+		// Color
+		VkRenderingAttachmentInfo colorAttachment{
+			.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+			.imageView = swapchain->GetCurrentView(),
+			.imageLayout = VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL,
+			.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+			.storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+			.clearValue = VkClearValue{.color = {{0.2f, 0.1f, 0.1f, 0.0f}} }
+		};
+		// Depth
+		VkRenderingAttachmentInfo depthAttachment{
+			.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO,
+			.imageView = m_depthBuffer->GetVkImageView(),
+			.imageLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL,
+			.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+			.storeOp = VK_ATTACHMENT_STORE_OP_STORE,
+			.clearValue = {.depthStencil = { 1.0f, 0 } }
+		};
+		VkRenderingInfo renderingInfo{
+			.sType = VK_STRUCTURE_TYPE_RENDERING_INFO,
+			.renderArea = { {0, 0}, extent },
+			.layerCount = 1,
+			.colorAttachmentCount = 1,
+			.pColorAttachments = &colorAttachment,
+			.pDepthAttachment = &depthAttachment,
+		};
+		vkCmdBeginRendering(*commandBuffer, &renderingInfo);
 	}
+
 	void BasicPBRRender::EndScene(std::shared_ptr<CommandBuffer> commandBuffer)
 	{
+		auto& vulkanCtx = VulkanContext::Get();
+		auto& swapchain = vulkanCtx.GetSwapchain();
+
+		vkCmdEndRendering(*commandBuffer);
+
+		VkImageSubresourceRange range{
+			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+			.baseMipLevel = 0, .levelCount = 1,
+			.baseArrayLayer = 0, .layerCount = 1,
+		};
+		commandBuffer->TransitionLayout(
+			swapchain->GetCurrentImage(), range,
+			ImageLayoutTransition::FromColorToPresent());
 	}
-	void BasicPBRRender::Draw(std::shared_ptr<CommandBuffer> commandBuffer, std::shared_ptr<DrawObject>)
+
+	void BasicPBRRender::Draw(std::shared_ptr<CommandBuffer> commandBuffer, std::shared_ptr<DrawObject> drawObject)
 	{
+		const auto& model = drawObject->GetModel();
+
+		// 頂点バッファインデックスバッファのバインド
+		std::vector<VkBuffer> vertexBuffers;
+		std::vector<VkDeviceSize> offsets;
+
+		for (uint32_t i = 0; i< int(ModelResource::VertexAttributeIndex::Count); ++i)
+		{
+			const auto& attrib = model->GetVertexAttribute(i);
+			vertexBuffers.push_back(attrib.buffer->GetVkBuffer());
+			offsets.push_back(0);
+		}
+		auto indexBuffer = model->GetIndexBuffer();
+
+		vkCmdBindVertexBuffers(*commandBuffer, 0, vertexBuffers.size(), vertexBuffers.data(), offsets.data());
+		vkCmdBindIndexBuffer(*commandBuffer, indexBuffer->GetVkBuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+		struct DrawInfo
+		{
+			glm::mat4 worldMatrix;
+			int materialIndex;
+			uint32_t indexCount;
+			uint32_t firstIndex;
+			uint32_t vertexOffset;
+		};
+		std::vector<DrawInfo> opaqueList, transparentList;
+		// ノードの行列とメッシュプリミティブを探索し、描画リストを作成
+		for (const auto& node : drawObject->GetNodes())
+		{
+			for (auto meshIndex : node.meshes)
+			{
+				const auto& mesh = model->GetMeshes()[meshIndex];
+				const auto& materials = drawObject->GetMaterials();
+
+				for (auto& meshPrimitive : mesh.primitives)
+				{
+					const auto& material = materials[meshPrimitive.material];
+					DrawInfo info{
+						.worldMatrix = node.mtxWorld,
+						.materialIndex = meshPrimitive.material,
+						.indexCount = meshPrimitive.indexCount,
+						.firstIndex = meshPrimitive.firstIndex,
+						.vertexOffset = meshPrimitive.vertexOffset,
+					};
+
+					using AlphaMode = ModelResource::Material::AlphaMode;
+					switch (material.alphaMode)
+					{
+					case AlphaMode::Opaque:
+					case AlphaMode::Mask:
+						opaqueList.push_back(std::move(info));
+						break;
+
+					case AlphaMode::Blend:
+						transparentList.push_back(std::move(info));
+						break;
+					}
+				}
+			}
+		}
+		const auto& materials = drawObject->GetMaterials();
+		auto sceneDescriptorSet = m_scene.descriptorSet;
+		uint32_t uboOffsets[] = { m_scene.dynamicOffset };
+
+		// 不透明、アルファマスクのものを描画する
+		vkCmdBindPipeline(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines[RenderPassTag::Opaque]);
+		for (const auto& info : opaqueList)
+		{
+			vkCmdPushConstants(
+				*commandBuffer, m_layouts.pipeline,
+				VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+				0, sizeof(glm::mat4), &info.worldMatrix);
+
+			VkDescriptorSet descriptorSets[] = {
+				sceneDescriptorSet,
+				materials[info.materialIndex].descriptorSet
+			};
+
+			vkCmdBindDescriptorSets(
+				*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_layouts.pipeline,
+				0, std::size(descriptorSets), descriptorSets,
+				std::size(uboOffsets), uboOffsets);
+
+			vkCmdDrawIndexed(*commandBuffer, info.indexCount, 1, info.firstIndex, info.vertexOffset, 0);
+		}
+
+		// 半透明のものを描画する
+		vkCmdBindPipeline(*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines[RenderPassTag::Transparent]);
+		for (const auto& info : transparentList)
+		{
+			vkCmdPushConstants(
+				*commandBuffer, m_layouts.pipeline,
+				VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+				0, sizeof(glm::mat4), &info.worldMatrix);
+
+			VkDescriptorSet descriptorSets[] = {
+				sceneDescriptorSet,
+				materials[info.materialIndex].descriptorSet
+			};
+
+			vkCmdBindDescriptorSets(
+				*commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_layouts.pipeline,
+				0, std::size(descriptorSets), descriptorSets,
+				std::size(uboOffsets), uboOffsets);
+
+			vkCmdDrawIndexed(*commandBuffer, info.indexCount, 1, info.firstIndex, info.vertexOffset, 0);
+		}
 	}
+
 	void BasicPBRRender::CreateDepthBuffer()
 	{
 		auto& vulkanCtx = VulkanContext::Get();

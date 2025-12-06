@@ -28,7 +28,7 @@ namespace render {
 		void BeginScene(std::shared_ptr<CommandBuffer> commandBuffer);
 		void EndScene(std::shared_ptr<CommandBuffer> commandBuffer);
 
-		void Draw(std::shared_ptr<CommandBuffer> commandBuffer, std::shared_ptr<DrawObject>);
+		void Draw(std::shared_ptr<CommandBuffer> commandBuffer, std::shared_ptr<DrawObject> drawObject);
 
 		VkDescriptorSetLayout GetSceneLayout() const { return m_layouts.sceneLayout; }
 		VkDescriptorSetLayout GetMaterialLayout() const { return m_layouts.materialLayout; }

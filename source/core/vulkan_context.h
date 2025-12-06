@@ -75,6 +75,15 @@ public:
 	// メモリタイプの取得
 	uint32_t FindMemoryType(const VkMemoryRequirements& requirements, VkMemoryPropertyFlags prorerties) const;
 
+	// ユニフォームバッファオフセットのアライメント制約
+	uint32_t MinUniformOffsetAlignment() const;
+
+	// ストレージヴァッファオフセットのアライメント制約
+	uint32_t MinStorageBufferOffsetAlignment() const;
+
+	// CPU-GPUの間でコヒーレントなメモリにおける最小の同期単位
+	uint32_t NonCoherentAtomSize() const;
+
 	// Function Callback(s)
 	std::function<void(std::vector<const char*>&)> GetWindowSystemExtensions;
 
