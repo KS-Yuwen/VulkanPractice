@@ -14,6 +14,7 @@
 #include "triangle_app.h"
 #include "simplecube_app.h"
 #include "texture_app.h"
+#include "drawmodel_app.h"
 
 namespace fs = std::filesystem;
 
@@ -72,6 +73,22 @@ void texture(GLFWwindow* window)
 
 }
 
+void drawModel(GLFWwindow* window)
+{
+	// アプリケーションの初期化
+	DrawModelApp theApp{};
+	theApp.OnInitialize();
+	// メッセージループ処理
+	while (glfwWindowShouldClose(window) == GLFW_FALSE)
+	{
+		glfwPollEvents();
+		// 描画処理
+		theApp.OnDrawFrame();
+	}
+	// 終了処理
+	theApp.OnCleanup();
+}
+
 int APIENTRY WinMain(
 	_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -121,7 +138,8 @@ int APIENTRY WinMain(
 
 	//triangle(window);
 	//simpleCube(window);
-	texture(window);
+	//texture(window);
+	drawModel(window);
 
 	// 終了処理
 	vulkanCtx.Cleanup();

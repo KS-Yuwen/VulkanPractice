@@ -220,6 +220,24 @@ uint32_t VulkanContext::FindMemoryType(const VkMemoryRequirements& requirements,
 	throw std::runtime_error("Failed to find suitable memory type");
 }
 
+uint32_t VulkanContext::MinUniformOffsetAlignment() const
+{
+	const auto& limits = m_physicalDeviceProperties.limits;
+	return limits.minUniformBufferOffsetAlignment;
+}
+
+uint32_t VulkanContext::MinStorageBufferOffsetAlignment() const
+{
+	const auto& limits = m_physicalDeviceProperties.limits;
+	return limits.minStorageBufferOffsetAlignment;
+}
+
+uint32_t VulkanContext::NonCoherentAtomSize() const
+{
+	const auto& limits = m_physicalDeviceProperties.limits;
+	return limits.nonCoherentAtomSize;
+}
+
 void VulkanContext::SetDebugObjectName(void* objectHandle, VkObjectType type, const char* name)
 {
 #if DEBUG || _DEBUG
