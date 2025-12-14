@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "vulkan_context.h"
 
+class IImageResource;
+
 struct ImageLayoutTransition
 {
 	VkImageLayout oldLayout;

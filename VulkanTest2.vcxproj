@@ -151,6 +151,7 @@
     <ClCompile Include="source\Render\model_loader.cpp" />
     <ClCompile Include="source\Render\model_resource.cpp" />
     <ClCompile Include="source\simplecube_app.cpp" />
+    <ClCompile Include="source\tessellation_app.cpp" />
     <ClCompile Include="source\texture_app.cpp" />
     <ClCompile Include="source\triangle_app.cpp" />
   </ItemGroup>
@@ -178,6 +179,7 @@
     <ClInclude Include="source\Render\model_loader.h" />
     <ClInclude Include="source\Render\model_resource.h" />
     <ClInclude Include="source\simplecube_app.h" />
+    <ClInclude Include="source\tessellation_app.h" />
     <ClInclude Include="source\texture_app.h" />
     <ClInclude Include="source\triangle_app.h" />
   </ItemGroup>
@@ -186,6 +188,10 @@
     <None Include="assets\shaders\basic_pbr\basic_pbr.vert" />
     <None Include="assets\shaders\cube\cube.frag" />
     <None Include="assets\shaders\cube\cube.vert" />
+    <None Include="assets\shaders\tessellation\tessellate.frag" />
+    <None Include="assets\shaders\tessellation\tessellate.tesc" />
+    <None Include="assets\shaders\tessellation\tessellate.tese" />
+    <None Include="assets\shaders\tessellation\tessellate.vert" />
     <None Include="assets\shaders\texture\texture.frag" />
     <None Include="assets\shaders\texture\texture.vert" />
     <None Include="assets\shaders\triangle\triangle.frag" />

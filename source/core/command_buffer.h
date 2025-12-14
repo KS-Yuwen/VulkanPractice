@@ -2,7 +2,7 @@
 #include "vulkan_context.h"
 #include "image_barrier.h"
 
-class ImageLayoutTransition;
+struct ImageLayoutTransition;
 
 class CommandBuffer
 {
