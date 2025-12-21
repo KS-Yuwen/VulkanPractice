@@ -100,10 +100,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_FORCE_RADIANS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_FORCE_RADIANS;VK_NO_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm;E:\stb;C:\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm;E:\stb;C:\Assimp\include;F:\VulkanTest2\VulkanTest2\volk-1.4.304</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\compute_app.cpp" />
     <ClCompile Include="source\core\asset_path.cpp" />
     <ClCompile Include="source\core\buffer_resource.cpp" />
     <ClCompile Include="source\core\command_buffer.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="source\core\resource_uploader.cpp" />
     <ClCompile Include="source\core\sampler.cpp" />
     <ClCompile Include="source\core\shader_loader.cpp" />
+    <ClCompile Include="source\core\single_header_impl.cpp" />
     <ClCompile Include="source\core\swapchain.cpp" />
     <ClCompile Include="source\core\texture_loader.cpp" />
     <ClCompile Include="source\core\vulkan_context.cpp" />
@@ -156,6 +158,7 @@
     <ClCompile Include="source\triangle_app.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\compute_app.h" />
     <ClInclude Include="source\core\asset_path.h" />
     <ClInclude Include="source\core\buffer_resource.h" />
     <ClInclude Include="source\core\command_buffer.h" />
@@ -186,6 +189,10 @@
   <ItemGroup>
     <None Include="assets\shaders\basic_pbr\basic_pbr.frag" />
     <None Include="assets\shaders\basic_pbr\basic_pbr.vert" />
+    <None Include="assets\shaders\computeshader\imageFilter.comp" />
+    <None Include="assets\shaders\computeshader\shader.frag" />
+    <None Include="assets\shaders\computeshader\shader.vert" />
+    <None Include="assets\shaders\computeshader\vectorAdd.comp" />
     <None Include="assets\shaders\cube\cube.frag" />
     <None Include="assets\shaders\cube\cube.vert" />
     <None Include="assets\shaders\tessellation\tessellate.frag" />

@@ -21,6 +21,14 @@ public:
 
 	void TransitionLayout(VkImage image, const VkImageSubresourceRange& range, const ImageLayoutTransition& transition);
 
+	template<typename T>
+	void TransitionLayout(std::shared_ptr<T> image, const ImageLayoutTransition& transition)
+	{
+		TransitionLayout(image->GetVkImage(), image->GetSubresourceRange(), transition);
+		image->SetAccessFlag(transition.dstAccessMask);
+		image->SetLayout(transition.newLayout);
+	}
+
 private:
 	VkCommandBuffer m_commandBuffer{};
 };

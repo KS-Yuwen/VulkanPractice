@@ -1,0 +1,116 @@
+#version 450
+#define THREAD_NUM 512
+#define ARRAY_LENGTH (500*10000)
+
+//#define USE_SIMPLE (1)
+//#define USE_REDUCTION (1)
+//#define USE_WRAP_SHUFFLE (1)
+
+#ifdef USE_WRAP_SHUFFLE
+#extension GL_KHR_shader_subgroup_basic : require
+#extension GL_KHR_shader_subgroup_shuffle_relative : require
+#endif
+
+
+layout(set=0,binding=0)
+buffer InputBuffer {
+  uint inputData[];
+};
+
+layout(set=0,binding=1)
+buffer OutputBuffer {
+  uint outputData[];
+};
+
+shared uint sdata[THREAD_NUM];
+
+layout(local_size_x=THREAD_NUM, local_size_y=1, local_size_z=1) in;
+void main()
+{
+#ifdef USE_SIMPLE
+  uint idx = gl_GlobalInvocationID.x;
+  if (idx == 0)
+  {
+    outputData[0] = 0;
+  }
+  barrier();
+  atomicAdd(outputData[0], inputData[idx]);
+  if (idx == 0)
+  {
+    outputData[1] = 1;  // USE_SIMPLE で記録した印.
+  }
+#endif
+
+#ifdef USE_REDUCTION
+  uint idx = gl_GlobalInvocationID.x;
+  uint thid = gl_LocalInvocationIndex;
+
+  // 初期化処理.
+  sdata[thid] = idx < ARRAY_LENGTH ? inputData[idx] : 0;
+
+  if ( gl_GlobalInvocationID.x == 0)
+  {
+    outputData[0] = 0;
+  }
+  barrier();
+
+
+  // reduction
+  for(uint stride=THREAD_NUM/2; stride > 0; stride >>= 1)
+  {
+    if(thid < stride)
+    {
+      sdata[thid] += sdata[thid + stride];
+    
+    }
+    barrier();    
+  }
+
+  if (thid == 0)
+  {
+    atomicAdd(outputData[0], sdata[0]);
+    outputData[1] = 2;  // USE_REDUCTION で記録した印.
+  }
+#endif
+
+#ifdef USE_WRAP_SHUFFLE
+  uint idx = gl_GlobalInvocationID.x;
+  uint stride = gl_WorkGroupSize.x * gl_NumWorkGroups.x;
+
+  sdata[gl_LocalInvocationIndex] = inputData[idx];
+  if ( gl_WorkGroupID.x == 0 && gl_LocalInvocationIndex == 0)
+  {
+    outputData[0] = 0;
+  }
+  barrier();
+
+
+  // reduction
+  for(uint i=THREAD_NUM/2; i > gl_SubgroupSize; i >>= 1)
+  {
+    if(gl_LocalInvocationID.x < i)
+    {
+      sdata[gl_LocalInvocationID.x] += sdata[gl_LocalInvocationID.x + i];
+    }
+    barrier();
+  }
+
+  // サブグループ内でのリダクション
+  uint localSum = sdata[gl_LocalInvocationID.x];
+  if (gl_SubgroupInvocationID < gl_SubgroupSize) {
+    for (uint offset = gl_SubgroupSize; offset > 0; offset /= 2) {
+      localSum += subgroupShuffleDown(localSum, offset);
+    }
+    sdata[gl_LocalInvocationID.x] = localSum;
+  }
+
+  // サブグループの先頭スレッドが結果を書き込む
+  if (gl_LocalInvocationID.x == 0) {
+    atomicAdd(outputData[0], sdata[0]);
+    outputData[1] = 3;  // USE_WRAP_SHUFFLE で記録した印.
+  }
+#endif
+
+
+}
+

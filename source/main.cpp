@@ -16,6 +16,7 @@
 #include "texture_app.h"
 #include "drawmodel_app.h"
 #include "tessellation_app.h"
+#include "compute_app.h"
 
 namespace fs = std::filesystem;
 
@@ -106,6 +107,22 @@ void tessellation(GLFWwindow* window)
 	theApp.OnCleanup();
 }
 
+void compute(GLFWwindow* window)
+{
+	// アプリケーションの初期化
+	ComputeApp theApp{};
+	theApp.OnInitialize();
+	// メッセージループ処理
+	while (glfwWindowShouldClose(window) == GLFW_FALSE)
+	{
+		glfwPollEvents();
+		// 描画処理
+		theApp.OnDrawFrame();
+	}
+	// 終了処理
+	theApp.OnCleanup();
+}
+
 int APIENTRY WinMain(
 	_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -157,7 +174,8 @@ int APIENTRY WinMain(
 	//simpleCube(window);
 	//texture(window);
 	//drawModel(window);
-	tessellation(window);
+	//tessellation(window);
+	compute(window);
 
 	// 終了処理
 	vulkanCtx.Cleanup();
