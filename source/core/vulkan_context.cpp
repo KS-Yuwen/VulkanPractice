@@ -1,4 +1,5 @@
-﻿#include "vulkan_context.h"
+﻿
+#include "vulkan_context.h"
 #include "swapchain.h"
 #include <stdexcept>
 #include <cassert>
@@ -20,10 +21,22 @@ void VulkanContext::Initialize(
 	ISurfaceProvider* surfaceProvider)
 {
 	m_surfaceProvider = surfaceProvider;
+
+	// 最初にVolkの初期化
+	volkInitialize();
+
 	CreateInstance(appName);        // Vulkanインスタンスの作成
+
+	// VkInstance 作成後に Volk 呼び出し
+	volkLoadInstance(m_vkInstance);
+
 	PickPhysicalDevice();           // 物理デバイスの選択
 	CreateDebugMessenger();         // デバッグ機能についての準備
 	CreateLogicalDevice();          // 論理デバイスの作成
+
+	// VkDevice 作成後に Volk 呼び出し
+	volkLoadDevice(m_vkDevice);
+
 	CreateCommandPool();            // コマンドプールの作成
 	CreateDescriptorPool();         // ディスクリプタプールの作成
 }
