@@ -167,3 +167,34 @@ public:
 private:
 	uint32_t m_blockSize = 0;
 };
+
+class StorageBuffer : public BufferResource<StorageBuffer>
+{
+	friend class GpuResourceBase<StorageBuffer>;
+private:
+	StorageBuffer() = default;
+public:
+	virtual ~StorageBuffer() = default;
+
+	virtual void* Map() override;
+	virtual void Unmap() override;
+
+	enum class AccessMode
+	{
+		GPUOnlyAccess,
+		CPUAccessible,
+	};
+
+	bool Initialize(VkDeviceSize size, AccessMode mode);
+
+	template<typename T>
+	T* MapTyped() { return reinterpret_cast<T*>(Map()); }
+
+	// Create, Initaizliseを1度で処理するための作成関数
+	static std::shared_ptr<StorageBuffer> Create(VkDeviceSize size, AccessMode mode)
+	{
+		auto buffer = GpuResourceBase::Create();
+		if (!buffer->Initialize(size, mode)) { return nullptr; }
+		return buffer;
+	}
+};

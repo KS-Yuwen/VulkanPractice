@@ -43,6 +43,9 @@
     <Filter Include="Shaders\tessellation">
       <UniqueIdentifier>{f4112f3f-9172-46fe-82f4-ba461b037d8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\computeshader">
+      <UniqueIdentifier>{c74ee8b7-5082-438b-92de-b6c9a4ac4a4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\asset_path.cpp">
@@ -112,6 +115,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\tessellation_app.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\compute_app.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -194,6 +200,9 @@
     <ClInclude Include="source\tessellation_app.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\compute_app.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\triangle\triangle.frag">
@@ -231,6 +240,18 @@
     </None>
     <None Include="assets\shaders\tessellation\tessellate.vert">
       <Filter>Shaders\tessellation</Filter>
+    </None>
+    <None Include="assets\shaders\computeshader\imageFilter.comp">
+      <Filter>Shaders\computeshader</Filter>
+    </None>
+    <None Include="assets\shaders\computeshader\shader.frag">
+      <Filter>Shaders\computeshader</Filter>
+    </None>
+    <None Include="assets\shaders\computeshader\shader.vert">
+      <Filter>Shaders\computeshader</Filter>
+    </None>
+    <None Include="assets\shaders\computeshader\vectorAdd.comp">
+      <Filter>Shaders\computeshader</Filter>
     </None>
   </ItemGroup>
 </Project>

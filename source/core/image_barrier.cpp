@@ -1,4 +1,6 @@
-﻿#include "image_barrier.h"
+﻿#include "vulkan_context.h"
+#include "image_resource.h"
+#include "image_barrier.h"
 
 ImageLayoutTransition ImageLayoutTransition::FromUndefinedToColorAttachment()
 {
@@ -57,5 +59,29 @@ ImageLayoutTransition ImageLayoutTransition::FromTransferDstToTransferSrc()
         .dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT,
         .srcStage = VK_PIPELINE_STAGE_TRANSFER_BIT,
         .dstStage = VK_PIPELINE_STAGE_TRANSFER_BIT
+    };
+}
+
+ImageLayoutTransition ImageLayoutTransition::ToShaderReadonlyOptimal(const IImageResource* image)
+{
+    return {
+    .oldLayout = image->GetLayout(),
+    .newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+    .srcAccessMask = image->GetAccessFlags(),
+    .dstAccessMask = VK_ACCESS_SHADER_READ_BIT,
+    .srcStage = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+    .dstStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT
+    };
+}
+
+ImageLayoutTransition ImageLayoutTransition::ToStorageImageGeneralLayout(const IImageResource* image)
+{
+    return {
+    .oldLayout = image->GetLayout(),
+    .newLayout = VK_IMAGE_LAYOUT_GENERAL,
+    .srcAccessMask = image->GetAccessFlags(),
+    .dstAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
+    .srcStage = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+    .dstStage = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT
     };
 }

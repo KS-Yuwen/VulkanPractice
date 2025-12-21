@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "vulkan_context.h"
 
 class IImageResource;
 
@@ -26,4 +25,12 @@ struct ImageLayoutTransition
 
 	// 転送先レイアウトから転送元レイアウトへ
 	static ImageLayoutTransition FromTransferDstToTransferSrc();
+
+	static ImageLayoutTransition ToShaderReadonlyOptimal(const IImageResource* image);
+
+	// ストレージイメージとしてシェーダーから読み書きできるように、
+	// 画像のレイアウトとアクセスマスクをVK_IMAGE_LAYOUT_GENERAL に遷移する
+	// Compute Shader および Frangment Shader からの読み書きを想定しており、
+	// それらのステージへの依存関係を確保する
+	static ImageLayoutTransition ToStorageImageGeneralLayout(const IImageResource* image);
 };

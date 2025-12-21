@@ -273,6 +273,39 @@ uint32_t DynamicUniformBuffer::GetCurrentOffset() const
     return uint32_t(offset);
 }
 
+void* StorageBuffer::Map()
+{
+    if (!(m_memProps & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)) return nullptr;
+
+    void* mapped = nullptr;
+    vkMapMemory(VulkanContext::Get().GetVkDevice(), m_memory, 0, m_size, 0, &mapped);
+    return mapped;
+}
+
+void StorageBuffer::Unmap()
+{
+    if (!(m_memProps & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)) return;
+
+	vkUnmapMemory(VulkanContext::Get().GetVkDevice(), m_memory);
+}
+
+bool StorageBuffer::Initialize(VkDeviceSize size, AccessMode mode)
+{
+    VkBufferCreateInfo bufferInfo{
+        .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+        .size = size,
+        .usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+        .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
+    };
+    VkMemoryPropertyFlags memProps = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    if (mode == AccessMode::CPUAccessible)
+    {
+        memProps = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    }
+    SetAccessFlags(VK_ACCESS_NONE);
+    return CreateBuffer(bufferInfo, memProps);
+}
+
 
 // 各クラスのテンプレートをインスタンス化
 template class BufferResource<VertexBuffer>;
@@ -280,3 +313,4 @@ template class BufferResource<IndexBuffer>;
 template class BufferResource<UniformBuffer>;
 template class BufferResource<StagingBuffer>;
 template class BufferResource<DynamicUniformBuffer>;
+template class BufferResource<StorageBuffer>;

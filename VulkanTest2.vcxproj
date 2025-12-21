@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\compute_app.cpp" />
     <ClCompile Include="source\core\asset_path.cpp" />
     <ClCompile Include="source\core\buffer_resource.cpp" />
     <ClCompile Include="source\core\command_buffer.cpp" />
@@ -156,6 +157,7 @@
     <ClCompile Include="source\triangle_app.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\compute_app.h" />
     <ClInclude Include="source\core\asset_path.h" />
     <ClInclude Include="source\core\buffer_resource.h" />
     <ClInclude Include="source\core\command_buffer.h" />
@@ -186,6 +188,10 @@
   <ItemGroup>
     <None Include="assets\shaders\basic_pbr\basic_pbr.frag" />
     <None Include="assets\shaders\basic_pbr\basic_pbr.vert" />
+    <None Include="assets\shaders\computeshader\imageFilter.comp" />
+    <None Include="assets\shaders\computeshader\shader.frag" />
+    <None Include="assets\shaders\computeshader\shader.vert" />
+    <None Include="assets\shaders\computeshader\vectorAdd.comp" />
     <None Include="assets\shaders\cube\cube.frag" />
     <None Include="assets\shaders\cube\cube.vert" />
     <None Include="assets\shaders\tessellation\tessellate.frag" />
