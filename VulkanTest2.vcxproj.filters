@@ -46,6 +46,9 @@
     <Filter Include="Shaders\computeshader">
       <UniqueIdentifier>{c74ee8b7-5082-438b-92de-b6c9a4ac4a4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\raytrace-pipeline">
+      <UniqueIdentifier>{97eb1a42-6503-49d4-93a4-b6618e196025}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\asset_path.cpp">
@@ -124,6 +127,12 @@
       <Filter>ソース ファイル\core</Filter>
     </ClCompile>
     <ClCompile Include="source\core\acceleration_structure.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\raytrace_pipeline_app.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\shader_binding_table_builder.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -212,6 +221,12 @@
     <ClInclude Include="source\core\acceleration_structure.h">
       <Filter>ヘッダー ファイル\core</Filter>
     </ClInclude>
+    <ClInclude Include="source\raytrace_pipeline_app.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\shader_binding_table_builder.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\triangle\triangle.frag">
@@ -261,6 +276,24 @@
     </None>
     <None Include="assets\shaders\computeshader\vectorAdd.comp">
       <Filter>Shaders\computeshader</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\shader.rchit">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\shader.rgen">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\shader.rmiss">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\shader.shadow.rmiss">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\copy_image.vert">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\copy_image.frag">
+      <Filter>Shaders\raytrace-pipeline</Filter>
     </None>
   </ItemGroup>
 </Project>

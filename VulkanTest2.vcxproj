@@ -142,6 +142,7 @@
     <ClCompile Include="source\core\image_resource.cpp" />
     <ClCompile Include="source\core\resource_uploader.cpp" />
     <ClCompile Include="source\core\sampler.cpp" />
+    <ClCompile Include="source\core\shader_binding_table_builder.cpp" />
     <ClCompile Include="source\core\shader_loader.cpp" />
     <ClCompile Include="source\core\single_header_impl.cpp" />
     <ClCompile Include="source\core\swapchain.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="source\core\vulkan_context.cpp" />
     <ClCompile Include="source\drawmodel_app.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\raytrace_pipeline_app.cpp" />
     <ClCompile Include="source\Render\basic_pbr_render.cpp" />
     <ClCompile Include="source\Render\draw_object.cpp" />
     <ClCompile Include="source\Render\model_loader.cpp" />
@@ -172,12 +174,14 @@
     <ClInclude Include="source\core\resource_uploader.h" />
     <ClInclude Include="source\core\sampler.h" />
     <ClInclude Include="source\core\sample_app.h" />
+    <ClInclude Include="source\core\shader_binding_table_builder.h" />
     <ClInclude Include="source\core\shader_loader.h" />
     <ClInclude Include="source\core\surface_provider.h" />
     <ClInclude Include="source\core\swapchain.h" />
     <ClInclude Include="source\core\texture_loader.h" />
     <ClInclude Include="source\core\vulkan_context.h" />
     <ClInclude Include="source\drawmodel_app.h" />
+    <ClInclude Include="source\raytrace_pipeline_app.h" />
     <ClInclude Include="source\Render\basic_pbr_render.h" />
     <ClInclude Include="source\Render\draw_object.h" />
     <ClInclude Include="source\Render\model_data.h" />
@@ -197,6 +201,12 @@
     <None Include="assets\shaders\computeshader\vectorAdd.comp" />
     <None Include="assets\shaders\cube\cube.frag" />
     <None Include="assets\shaders\cube\cube.vert" />
+    <None Include="assets\shaders\raytrace-pipeline\copy_image.frag" />
+    <None Include="assets\shaders\raytrace-pipeline\copy_image.vert" />
+    <None Include="assets\shaders\raytrace-pipeline\shader.rchit" />
+    <None Include="assets\shaders\raytrace-pipeline\shader.rgen" />
+    <None Include="assets\shaders\raytrace-pipeline\shader.rmiss" />
+    <None Include="assets\shaders\raytrace-pipeline\shader.shadow.rmiss" />
     <None Include="assets\shaders\tessellation\tessellate.frag" />
     <None Include="assets\shaders\tessellation\tessellate.tesc" />
     <None Include="assets\shaders\tessellation\tessellate.tese" />
