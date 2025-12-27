@@ -148,4 +148,15 @@ private:
 	{
 		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT
 	};
-};
+	VkPhysicalDeviceRayTracingPipelineFeaturesKHR m_raytracingPipelineFeatures{
+		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_FEATURES_KHR,
+	};
+	VkPhysicalDeviceAccelerationStructureFeaturesKHR m_accelerationStructureFeatures{
+		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR,
+	};
+	VkPhysicalDeviceRayQueryFeaturesKHR m_rayqueryFeatures{
+		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR,
+	};
+	VkPhysicalDeviceMeshShaderFeaturesEXT m_meshShaderFeatures{
+		.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_EXT,
+	}; };

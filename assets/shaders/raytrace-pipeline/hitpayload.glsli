@@ -1,0 +1,14 @@
+struct HitPayload
+{
+  vec3 color;
+  vec3 worldPosition;
+  int materialKind;
+  bool rayTerminate;
+  vec3 worldNormal;
+  float roughness;
+};
+
+struct ShadowHitPayload
+{
+  bool isOccluded;
+};

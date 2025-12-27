@@ -123,6 +123,9 @@
     <ClCompile Include="source\core\single_header_impl.cpp">
       <Filter>ソース ファイル\core</Filter>
     </ClCompile>
+    <ClCompile Include="source\core\acceleration_structure.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\core\asset_path.h">
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="source\compute_app.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\acceleration_structure.h">
+      <Filter>ヘッダー ファイル\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

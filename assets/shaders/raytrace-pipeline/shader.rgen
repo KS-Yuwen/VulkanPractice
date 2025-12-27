@@ -1,0 +1,159 @@
+#version 460
+#extension GL_EXT_ray_tracing : enable
+#extension GL_GOOGLE_include_directive : enable
+#include "hitpayload.glsli"
+
+layout(location = 0) rayPayloadEXT HitPayload payload;
+layout(location = 1) rayPayloadEXT ShadowHitPayload shadowPayload;
+
+layout(set=0,binding=0) uniform SceneParameters
+{
+  mat4 mtxView;
+  mat4 mtxProj;
+  mat4 mtxViewInv;
+  mat4 mtxProjInv;
+  vec4 lightDirection;
+  vec4 eyePosition;
+} sceneParams;
+
+layout(set=0,binding=1) uniform accelerationStructureEXT topLevelAS;
+layout(set=0,binding=2,rgba8) uniform image2D resultImage;
+
+void TraceRay(vec3 origin, vec3 direction, uint rayFlags)
+{
+  float tmin = 0.001, tmax = 10000.0;
+  traceRayEXT(
+    topLevelAS,
+    rayFlags,
+    0xff, // cullMask
+    0,    // sbtRecordOffset
+    1,    // sbtRecordStride
+    0,    // missIndex
+    origin, tmin, direction, tmax,
+    0     // payload
+  );
+}
+bool TraceShadowRay(vec3 origin)
+{
+  float tmin = 0.001, tmax = 10000.0;
+  vec3 direction = normalize(sceneParams.lightDirection.xyz);
+
+  // ミスヒットシェーダーで処理されると falseになる.
+  shadowPayload.isOccluded = true;
+  traceRayEXT(
+    topLevelAS,
+    gl_RayFlagsSkipClosestHitShaderEXT | gl_RayFlagsTerminateOnFirstHitEXT,
+    0xff, // cullMask
+    0,    // sbtRecordOffset
+    1,    // sbtRecordStride
+    1,    // missIndex
+    origin.xyz, tmin, direction, tmax,
+    1     // payload location
+  ); 
+  return shadowPayload.isOccluded == true;
+}
+
+vec3 CalcSpecular(vec3 incidentRay, vec3 worldNormal, float roughness)
+{
+  if(roughness < 1.0)
+  {
+    roughness = clamp(roughness, 0.05, 1);
+    vec3 lightDir = normalize(sceneParams.lightDirection.xyz);
+    vec3 R = reflect(incidentRay, worldNormal);
+    float specPower = (1.0f - roughness) * 100.0f;
+    return vec3(pow(max(0, dot(lightDir, R)), specPower));
+  }
+  return vec3(0);
+}
+
+void main() {
+  const vec2 pixelCenter = vec2(gl_LaunchIDEXT.xy) + vec2(0.5);
+  const vec2 screenPos = pixelCenter / vec2(gl_LaunchSizeEXT.xy);
+  vec2 d = screenPos * 2.0 - 1.0;
+
+  vec4 origin = sceneParams.mtxViewInv * vec4(0, 0, 0, 1);
+  vec4 target = sceneParams.mtxProjInv * vec4(d.x, -d.y, 1, 1);
+  vec4 direction = sceneParams.mtxViewInv * vec4(target.xyz, 0);
+
+  vec3 throughput = vec3(1.0);
+  vec3 finalColor = vec3(0.0);
+
+  float tmin = 0.01, tmax = 10000.0;
+  traceRayEXT(
+    topLevelAS,
+    gl_RayFlagsOpaqueEXT,
+    0xff, // cullMask
+    0,    // sbtRecordOffset
+    1,    // sbtRecordStride
+    0,    // missIndex
+    origin.xyz, tmin, direction.xyz, tmax,
+    0     // payload
+  );
+
+  for(int bounce = 0; bounce < 4;++bounce)
+  {
+    direction.xyz = normalize(direction.xyz);
+    TraceRay(origin.xyz, direction.xyz, gl_RayFlagsOpaqueEXT);
+
+    vec3 worldPosition = payload.worldPosition;
+    vec3 worldNormal = normalize(payload.worldNormal);
+    vec3 specularColor = CalcSpecular(direction.xyz, worldNormal, payload.roughness);
+
+    vec3 color = payload.color;
+    if(payload.materialKind == 0 )
+    {
+      vec3 lightDir = normalize(sceneParams.lightDirection.xyz);
+      float dotNL = clamp(dot(worldNormal, lightDir), 0.0, 1);
+      color *= dotNL;
+      if (dotNL > 0)
+      {
+        bool isShadow = TraceShadowRay(worldPosition);
+        color *= isShadow ? 0.3 : 1.0;
+        if(!isShadow)
+        {
+          color += specularColor;
+        }
+      }
+    }
+    if(payload.materialKind == 1 )
+    {
+      color += specularColor;
+      // 反射ベクトルを求める.
+      direction.xyz = normalize(reflect(direction.xyz, worldNormal));
+      origin.xyz = worldPosition + worldNormal * 0.0001;
+    }
+    if(payload.materialKind == 2)
+    {
+      // 屈折ベクトルを求める.
+      const float ior = 1.025;
+      bool into = dot(direction.xyz, worldNormal) < 0;
+      vec3 outwardNormal = into ? worldNormal : -worldNormal;
+      float refractionRatio = into ? (1.0/ior) : (ior/1.0);
+      color += into ? specularColor : vec3(0);
+
+      vec3 refractDir = normalize(refract(direction.xyz, outwardNormal, refractionRatio));
+      bool cannotRefract = length(refractDir) < 0.1; // 屈折ベクトルが求まらなかった.
+      
+      if (!cannotRefract)
+      {
+        // 屈折ベクトルで発射.
+        origin.xyz = worldPosition + outwardNormal * -0.001;
+        direction.xyz = refractDir;
+      }
+      else
+      {
+        // 全反射.
+        direction.xyz = reflect(direction.xyz, outwardNormal);
+        origin.xyz = worldPosition + outwardNormal * 0.001;
+      }
+    }
+    // 終了条件ならループを打ち切り.
+    if (payload.rayTerminate)
+    {
+      finalColor = color * throughput;
+      break;
+    }
+    throughput *= color;
+  }
+  imageStore(resultImage, ivec2(gl_LaunchIDEXT.xy), vec4(finalColor, 1.0));
+}

@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\compute_app.cpp" />
+    <ClCompile Include="source\core\acceleration_structure.cpp" />
     <ClCompile Include="source\core\asset_path.cpp" />
     <ClCompile Include="source\core\buffer_resource.cpp" />
     <ClCompile Include="source\core\command_buffer.cpp" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\compute_app.h" />
+    <ClInclude Include="source\core\acceleration_structure.h" />
     <ClInclude Include="source\core\asset_path.h" />
     <ClInclude Include="source\core\buffer_resource.h" />
     <ClInclude Include="source\core\command_buffer.h" />
