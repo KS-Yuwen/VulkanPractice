@@ -16,6 +16,7 @@ public:
 	virtual void Unmap() = 0;
 
 	virtual VkDescriptorBufferInfo GetDescriptorInfo() const = 0;
+	virtual VkDeviceAddress GetDeviceAddress() const = 0;
 };
 
 template<typename T>
@@ -36,7 +37,7 @@ public:
 	VkDeviceSize GetBufferSize() const override { return m_size; }
 
 	VkDescriptorBufferInfo GetDescriptorInfo() const override;
-
+	VkDeviceAddress GetDeviceAddress() const override { return m_deviceAddress; }
 protected:
 	BufferResource() = default;
 
@@ -46,7 +47,7 @@ protected:
 	VkDeviceSize m_size{};
 	VkMemoryPropertyFlags m_memProps{};
 	VkAccessFlags m_accessFlags = VK_ACCESS_NONE;
-
+	VkDeviceAddress m_deviceAddress{};
 };
 
 class VertexBuffer : public BufferResource<VertexBuffer>
@@ -195,6 +196,50 @@ public:
 	{
 		auto buffer = GpuResourceBase::Create();
 		if (!buffer->Initialize(size, mode)) { return nullptr; }
+		return buffer;
+	}
+};
+
+class AccelerationStructureBuffer : public BufferResource<AccelerationStructureBuffer>
+{
+	friend class GpuResourceBase<AccelerationStructureBuffer>;
+private:
+	AccelerationStructureBuffer() = default;
+public:
+	virtual ~AccelerationStructureBuffer() = default;
+
+	virtual void* Map() override { return nullptr; }
+	virtual void Unmap() override {}
+
+	bool Initialize(VkDeviceSize size);
+
+	// Create, Initializeを1度で処理するための作成関数
+	static std::shared_ptr<AccelerationStructureBuffer> Create(VkDeviceSize size)
+	{
+		auto buffer = GpuResourceBase::Create();
+		if (!buffer->Initialize(size)) { return nullptr; }
+		return buffer;
+	}
+};
+
+class ShaderBindingTableBuffer : public BufferResource<ShaderBindingTableBuffer>
+{
+	friend class GpuResourceBase<ShaderBindingTableBuffer>;
+private:
+	ShaderBindingTableBuffer() = default;
+public:
+	virtual ~ShaderBindingTableBuffer() = default;
+
+	virtual void* Map() override;
+	virtual void Unmap() override;
+
+	bool Initialize(VkDeviceSize size);
+
+	// Create, Initialize を1度で処理するための作成関数
+	static std::shared_ptr<ShaderBindingTableBuffer> Create(VkDeviceSize size)
+	{
+		auto buffer = GpuResourceBase::Create();
+		if (!buffer->Initialize(size)) { return nullptr; }
 		return buffer;
 	}
 };

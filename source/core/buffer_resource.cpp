@@ -85,6 +85,12 @@ bool BufferResource<T>::CreateBuffer(const VkBufferCreateInfo& createInfo, VkMem
     m_size = createInfo.size;
     m_memProps = memProps;
 
+    VkBufferDeviceAddressInfo addressInfo{
+        .sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO,
+        .buffer = m_buffer,
+    };
+    m_deviceAddress = vkGetBufferDeviceAddress(device, &addressInfo);
+
     return true;
 }
 
@@ -302,10 +308,52 @@ bool StorageBuffer::Initialize(VkDeviceSize size, AccessMode mode)
     {
         memProps = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
     }
+    // レイトレーシングで使用される場合には必要
+    bufferInfo.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
+
     SetAccessFlags(VK_ACCESS_NONE);
     return CreateBuffer(bufferInfo, memProps);
 }
 
+bool AccelerationStructureBuffer::Initialize(VkDeviceSize size)
+{
+    VkBufferCreateInfo bufferInfo{
+        .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+        .size = size,
+        .usage = VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT,
+        .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
+    };
+    VkMemoryPropertyFlags memProps = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    SetAccessFlags(VK_ACCESS_NONE);
+    return CreateBuffer(bufferInfo, memProps);
+}
+
+bool ShaderBindingTableBuffer::Initialize(VkDeviceSize size)
+{
+    VkBufferCreateInfo bufferInfo{
+        .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+        .size = size,
+        .usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT | VK_BUFFER_USAGE_SHADER_BINDING_TABLE_BIT_KHR ,
+        .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
+    };
+    VkMemoryPropertyFlags memProps = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    SetAccessFlags(VK_ACCESS_NONE);
+    return CreateBuffer(bufferInfo, memProps);
+}
+void* ShaderBindingTableBuffer::Map()
+{
+    if (!(m_memProps & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)) return nullptr;
+
+    void* mapped = nullptr;
+    vkMapMemory(VulkanContext::Get().GetVkDevice(), m_memory, 0, m_size, 0, &mapped);
+    return mapped;
+}
+void ShaderBindingTableBuffer::Unmap()
+{
+    if (!(m_memProps & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)) return;
+
+    vkUnmapMemory(VulkanContext::Get().GetVkDevice(), m_memory);
+}
 
 // 各クラスのテンプレートをインスタンス化
 template class BufferResource<VertexBuffer>;
@@ -314,3 +362,5 @@ template class BufferResource<UniformBuffer>;
 template class BufferResource<StagingBuffer>;
 template class BufferResource<DynamicUniformBuffer>;
 template class BufferResource<StorageBuffer>;
+template class BufferResource<AccelerationStructureBuffer>;
+template class BufferResource<ShaderBindingTableBuffer>;

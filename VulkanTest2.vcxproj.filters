@@ -46,6 +46,18 @@
     <Filter Include="Shaders\computeshader">
       <UniqueIdentifier>{c74ee8b7-5082-438b-92de-b6c9a4ac4a4e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\raytrace-pipeline">
+      <UniqueIdentifier>{97eb1a42-6503-49d4-93a4-b6618e196025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Render\rt">
+      <UniqueIdentifier>{3d397d08-e190-402e-a4a3-527f3fb5c25e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Render\rt">
+      <UniqueIdentifier>{9248e17d-5d86-4016-8c74-3f8994704d4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\pathtrace-rayquery">
+      <UniqueIdentifier>{7f45216f-e29e-4407-a3c9-f9068f6e4120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\asset_path.cpp">
@@ -122,6 +134,24 @@
     </ClCompile>
     <ClCompile Include="source\core\single_header_impl.cpp">
       <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\acceleration_structure.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\raytrace_pipeline_app.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\shader_binding_table_builder.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\rt\model_resource_rt.cpp">
+      <Filter>ソース ファイル\Render\rt</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\rt\draw_object_rt.cpp">
+      <Filter>ソース ファイル\Render\rt</Filter>
+    </ClCompile>
+    <ClCompile Include="source\pathtrace_rayquery_app.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +236,24 @@
     <ClInclude Include="source\compute_app.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\core\acceleration_structure.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\raytrace_pipeline_app.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\shader_binding_table_builder.h">
+      <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\rt\model_resource_rt.h">
+      <Filter>ヘッダー ファイル\Render\rt</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\rt\draw_object_rt.h">
+      <Filter>ヘッダー ファイル\Render\rt</Filter>
+    </ClInclude>
+    <ClInclude Include="source\pathtrace_rayquery_app.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\triangle\triangle.frag">
@@ -255,6 +303,42 @@
     </None>
     <None Include="assets\shaders\computeshader\vectorAdd.comp">
       <Filter>Shaders\computeshader</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\shader.rchit">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\shader.rgen">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\shader.rmiss">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\shader.shadow.rmiss">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\copy_image.vert">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\raytrace-pipeline\copy_image.frag">
+      <Filter>Shaders\raytrace-pipeline</Filter>
+    </None>
+    <None Include="assets\shaders\pathtrace-rayquery\copy_image.frag">
+      <Filter>Shaders\pathtrace-rayquery</Filter>
+    </None>
+    <None Include="assets\shaders\pathtrace-rayquery\copy_image.frag.spv">
+      <Filter>Shaders\pathtrace-rayquery</Filter>
+    </None>
+    <None Include="assets\shaders\pathtrace-rayquery\copy_image.vert">
+      <Filter>Shaders\pathtrace-rayquery</Filter>
+    </None>
+    <None Include="assets\shaders\pathtrace-rayquery\copy_image.vert.spv">
+      <Filter>Shaders\pathtrace-rayquery</Filter>
+    </None>
+    <None Include="assets\shaders\pathtrace-rayquery\shader.comp">
+      <Filter>Shaders\pathtrace-rayquery</Filter>
+    </None>
+    <None Include="assets\shaders\pathtrace-rayquery\shader.comp.spv">
+      <Filter>Shaders\pathtrace-rayquery</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -379,6 +379,14 @@ void VulkanContext::CreateLogicalDevice()
 	std::vector<const char*> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 	};
+	// 上下方向を合わせるために有効とする
+	deviceExtensions.push_back(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
+
+	// レイトレーシングパイプライン用有効化の宣言
+	deviceExtensions.push_back(VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME);
+	deviceExtensions.push_back(VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME);
+	deviceExtensions.push_back(VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME);
+
 
 	float priority = 1.0f;
 	VkDeviceQueueCreateInfo queueInfo{};
@@ -568,4 +576,16 @@ void VulkanContext::BuildVkFeatures()
 	// 機能を有効化
 	m_vulkan13Features.dynamicRendering = VK_TRUE;
 	m_vulkan13Features.synchronization2 = VK_TRUE;
+
+	// レイトレーシングパイプライン有効
+	m_raytracingPipelineFeatures.rayTracingPipeline = VK_TRUE;
+	m_accelerationStructureFeatures.accelerationStructure = VK_TRUE;
+
+	m_vulkan12Features.bufferDeviceAddress = VK_TRUE;
+	m_vulkan12Features.descriptorIndexing = VK_TRUE;
+	m_vulkan12Features.descriptorBindingVariableDescriptorCount = VK_TRUE;
+
+	// レイクエリー有効
+	m_rayqueryFeatures.rayQuery = VK_TRUE;
+	m_accelerationStructureFeatures.accelerationStructure = VK_TRUE;
 }

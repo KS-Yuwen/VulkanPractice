@@ -1,0 +1,371 @@
+#version 460
+#extension GL_EXT_ray_tracing : enable
+#extension GL_EXT_ray_query : enable
+#extension GL_EXT_buffer_reference : enable
+#extension GL_EXT_scalar_block_layout : enable
+#extension GL_EXT_shader_explicit_arithmetic_types : enable
+#extension GL_EXT_nonuniform_qualifier : enable
+//#extension GL_EXT_ray_tracing_position_fetch : enable
+// position_fetch を使用する際には VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_KHR フラグも忘れずに.
+
+const float PI = 3.14159265359;
+
+layout(set=0,binding=0) uniform SceneParameters
+{
+  mat4 mtxView;
+  mat4 mtxProj;
+  mat4 mtxViewInv;
+  mat4 mtxProjInv;
+  vec4 lightDirection;
+  vec3 eyePosition;
+  float exposure;
+} sceneParams;
+layout(set=0,binding=1) uniform accelerationStructureEXT topLevelAS;
+layout(set=0,binding=2,rgba8) uniform image2D resultImage;
+
+struct Material
+{
+  vec4 baseColor;
+  float metallic;
+  float roughness;
+  uint  materialKind;
+  uint  _padd0;
+
+  uint  baseColorTexIndex;
+  uint  metallicRoughnessTexIndex;
+  uint  normalTexIndex;
+  uint  _padd1;
+};
+
+struct BlasGeometryInfo
+{
+  uint64_t indexBuffer;
+  uint64_t vbPosition;
+  uint64_t vbNormal;
+  uint64_t vbTexcoord;
+  
+  uint32_t materialIndex;
+  uint32_t padd0;
+};
+
+layout(set=0,binding=3) readonly buffer MaterialBuffer { Material materials[];};
+layout(set=0,binding=4) uniform sampler2D textureList[];
+
+layout(set=0,binding=5) buffer BlasGeometryInfoBuffer { BlasGeometryInfo blasGeometryInfo[]; };
+layout(set=0,binding=6,r32ui) uniform uimage2D randState;
+layout(set=0,binding=7,rgba32f) uniform image2D accumImage;
+
+layout(buffer_reference, buffer_reference_align=4, scalar) readonly buffer Indices { uvec3 i[]; };
+layout(buffer_reference, buffer_reference_align=4, scalar) readonly buffer Vector3 { vec3 v[]; };
+layout(buffer_reference, buffer_reference_align=4, scalar) readonly buffer Vector2 { vec2 v[]; };
+layout(buffer_reference, buffer_reference_align=4, scalar) readonly buffer RandBuffer { uint v[]; };
+
+
+struct RandomState {
+  uint stateXorShift;
+} gRandomState;
+
+void initXorShift() {
+  gRandomState.stateXorShift = imageLoad(randState, ivec2(gl_GlobalInvocationID.xy)).x;
+}
+
+void saveXorShift()
+{
+  imageStore(randState, ivec2(gl_GlobalInvocationID.xy), uvec4(gRandomState.stateXorShift));
+}
+
+uint xorshift32(inout RandomState state)
+{
+  uint x = state.stateXorShift;
+  x ^= x << 13u;
+  x ^= x >> 17u;
+  x ^= x << 5u;
+  state.stateXorShift = x;
+  return x;
+}
+
+// [0, 1] の乱数を返す.
+float random()
+{
+  const uint UINT32_MAX = 4294967295u;
+  const float k = 1.0 / float(UINT32_MAX);
+  return float(xorshift32(gRandomState)) * k;
+}
+vec3 randomInUnitSphere()
+{
+  for(int i=0;i<32;++i)
+  {
+    vec3 v;
+    v.x = random();
+    v.y = random();
+    v.z = random();
+    v = v * 2.0 - 1.0; // 各成分を [-1, +1] の範囲に変換.
+    if (dot(v,v) < 1.0 )
+      return v;
+  }
+  return vec3(0,1,0);
+}
+
+vec3 randomSampleHemisphere(const vec3 normal)
+{
+  vec3 vecInSphere = normalize(randomInUnitSphere());
+  if(dot(vecInSphere, normal) > 0.0)
+    return vecInSphere;
+  else
+    return -vecInSphere;
+}
+
+BlasGeometryInfo GetGeometryInfo(rayQueryEXT rq)
+{
+  uint geometryIndex = rayQueryGetIntersectionInstanceShaderBindingTableRecordOffsetEXT(rq, true);
+  //geometryIndex = rayQueryGetIntersectionInstanceCustomIndexEXT(rq, true);
+  return blasGeometryInfo[nonuniformEXT(geometryIndex)];
+}
+
+struct Vertex
+{
+  vec3 position;
+  vec3 normal;
+  vec2 texcoord;
+};
+Vertex GetVertex(rayQueryEXT rq)
+{
+  BlasGeometryInfo geometryInfo = GetGeometryInfo(rq);
+  Indices indices = Indices(geometryInfo.indexBuffer);
+  Vector3 bufferPosition = Vector3(geometryInfo.vbPosition);
+  Vector3 bufferNormal = Vector3(geometryInfo.vbNormal);
+  Vector2 bufferTexcoord = Vector2(geometryInfo.vbTexcoord);
+
+  vec3 barys = vec3(0);
+  barys.yz = rayQueryGetIntersectionBarycentricsEXT(rq, true);
+  barys.x = 1.0 - barys.y - barys.z;
+  int primitiveIndex = rayQueryGetIntersectionPrimitiveIndexEXT(rq, true);
+  const uvec3 idx = indices.i[nonuniformEXT(primitiveIndex)];
+  vec3 position = vec3(0);
+#if 01
+  position += bufferPosition.v[idx.x] * barys.x;
+  position += bufferPosition.v[idx.y] * barys.y;
+  position += bufferPosition.v[idx.z] * barys.z;
+#else
+  vec3 pos[3];
+  rayQueryGetIntersectionTriangleVertexPositionsEXT(rq, true, pos);
+  position += pos[0] * barys.x;
+  position += pos[1] * barys.y;
+  position += pos[2] * barys.z;
+#endif
+
+  vec3 normal = vec3(0);
+  normal += bufferNormal.v[idx.x] * barys.x;
+  normal += bufferNormal.v[idx.y] * barys.y;
+  normal += bufferNormal.v[idx.z] * barys.z;
+
+  vec2 texcoord = vec2(0);
+  texcoord += bufferTexcoord.v[idx.x] * barys.x;
+  texcoord += bufferTexcoord.v[idx.y] * barys.y;
+  texcoord += bufferTexcoord.v[idx.z] * barys.z;
+
+  Vertex v;
+  v.position = position;
+  v.normal = normal;
+  v.texcoord = texcoord;
+  return v;
+}
+Vertex GetVertexWorld(rayQueryEXT rq)
+{
+  Vertex v = GetVertex(rq);
+  mat4x3 mtxWorld = rayQueryGetIntersectionObjectToWorldEXT(rq, true);
+  vec3 worldPosition = mtxWorld * vec4(v.position, 1);
+
+  v.position = worldPosition;
+  v.normal = normalize(mat3(mtxWorld) * v.normal);
+  return v;
+}
+
+vec4 GetBaseColor(Vertex v, Material material)
+{
+  vec4 baseColor = material.baseColor;
+  if (nonuniformEXT(material.baseColorTexIndex) != 0xFFFFFFFF)
+  {
+    vec4 texBaseColor = textureLod(textureList[nonuniformEXT(material.baseColorTexIndex)], v.texcoord, 0);
+    baseColor *= texBaseColor;
+  }
+  return baseColor;
+}
+vec3 GetWorldNormal(mat4x3 mtxWorld, Vertex v)
+{
+  return normalize(mat3(mtxWorld) * v.normal);
+}
+vec3 GetWorldPosition(mat4x3 mtxWorld, Vertex v)
+{
+  return mtxWorld * vec4(v.position, 1);
+}
+
+Material GetMaterial(rayQueryEXT rq)
+{
+  uint offsetIndex = rayQueryGetIntersectionInstanceShaderBindingTableRecordOffsetEXT(rq, true);
+  uint materialIndex = blasGeometryInfo[nonuniformEXT(offsetIndex)].materialIndex;
+  Material material = materials[nonuniformEXT(materialIndex)];
+  return material;
+}
+
+vec3  missHitRadiance(vec3 rayDirection)
+{
+  // ベクトルのY成分から背景となる色を計算する.
+  vec3 dir = normalize(rayDirection);
+  float t = 0.5 * (dir.y + 1.0);
+  // 背景(空)からの寄与を計算.
+  //vec3 sky = vec3(0.75, 0.9, 1.0);
+  vec3 sky = vec3(0.6, 0.7, 1.0);
+  vec3 ground= vec3(1.0);
+  vec3 emission = mix(ground, sky, t);
+  return emission;
+}
+
+float fresnel(float cosTheta, float ior)
+{
+  float r0 = (1 - ior) / (1 + ior);
+  r0 = r0 * r0;
+  return r0 + (1.0 - r0) * pow( (1 - cosTheta), 5.0 );
+}
+
+
+vec3 traceRayColor(vec3 rayOrigin, vec3 rayDirection)
+{
+  vec3 finalColor = vec3(0);
+  vec3 throughput = vec3(1);
+  vec3 emission = vec3(0);
+  bool raytraceTerminate = false;
+
+  for(int bounce=0;bounce < 8; bounce++)
+  {
+    if (raytraceTerminate)
+    {
+      finalColor.xyz = emission * throughput;
+      break;
+    }
+
+    float tmin = 0.00001, tmax = 100000.0;
+    rayQueryEXT rayQuery;
+    rayQueryInitializeEXT(
+      rayQuery, topLevelAS,
+      gl_RayFlagsOpaqueEXT,
+      0xff, // cullMask
+      rayOrigin, tmin, rayDirection, tmax
+      );
+    // レイの発射.
+    rayQueryProceedEXT(rayQuery);
+    uint committedStatus = rayQueryGetIntersectionTypeEXT(rayQuery, true);
+    // AnyHit, Intersection Shaderを使わないため、すぐに結果を判定する.
+    if(committedStatus != gl_RayQueryCommittedIntersectionTriangleEXT)
+    {
+      // no-hit
+      emission = missHitRadiance(rayDirection);
+      raytraceTerminate = true;
+    }
+    else
+    {
+      // hit
+      Vertex v = GetVertexWorld(rayQuery);
+      Material material = GetMaterial(rayQuery);
+      vec3 baseColor = GetBaseColor(v, material).xyz;
+
+      if (material.materialKind == 0)
+      {
+        // Lambertian
+        rayOrigin = v.position;
+        vec3 wi = randomSampleHemisphere(v.normal);
+        rayDirection = normalize(wi);
+      }
+
+      if (material.materialKind == 1 )
+      {
+        // metal
+        rayDirection = normalize(reflect(rayDirection, v.normal));
+        rayOrigin = v.position + v.normal * 0.001;
+
+        // ラフネス考慮.
+        rayDirection = normalize(rayDirection + randomInUnitSphere() * material.roughness);
+      }
+      
+      if (material.materialKind == 2)
+      {
+        // refraction
+        const float ior = 1.33;
+        float cosTheta = dot(rayDirection, v.normal);
+        bool into = cosTheta < 0;
+        vec3 outward_normal = into ? v.normal : -v.normal;
+        float refractionRatio = into ? (1.0 / ior) : (ior / 1.0);
+
+        vec3 refractDir = refract(rayDirection, outward_normal, refractionRatio); 
+        bool cannotRefract = length(refractDir) < 0.1;    // 屈折ベクトルが求まらなかった.
+
+        cosTheta = clamp(abs(cosTheta), 0, 1);
+        if (cannotRefract || random() < fresnel(cosTheta, refractionRatio))
+        {
+          // 全反射 or 反射のケース.
+          rayDirection = reflect(rayDirection, outward_normal);
+          rayOrigin = v.position + outward_normal * 0.001;
+        }
+        else
+        {
+          rayDirection = refractDir;
+          rayOrigin = v.position + outward_normal * -0.001;
+        }
+        rayDirection = normalize(rayDirection);
+      }
+
+      throughput *= baseColor;
+    }
+
+  }
+
+  return finalColor;
+}
+
+layout(local_size_x=8,local_size_y=8,local_size_z=1) in;
+void main() {
+  initXorShift();
+
+  vec2 pixelCenter = vec2(gl_GlobalInvocationID.xy) + vec2(0.5);
+  vec2 subpixelJitter = vec2(random(), random()) - vec2(0.5); // [-0.5, 0.5]の範囲のベクトル.
+  pixelCenter = pixelCenter - subpixelJitter;
+
+  const vec2 screenPos = pixelCenter / (vec2(gl_NumWorkGroups.xy * 8) );
+  vec2 d = screenPos * 2.0 - 1.0;
+
+  vec4 origin = sceneParams.mtxViewInv * vec4(0, 0, 0, 1);
+  vec4 target = sceneParams.mtxProjInv * vec4(d.x, -d.y, 1, 1);
+  vec4 direction = sceneParams.mtxViewInv * vec4(target.xyz, 0);
+  direction.xyz = normalize(direction.xyz);
+
+  vec3 color = vec3(0);
+  color = traceRayColor(origin.xyz, direction.xyz);
+
+  vec4 accum = imageLoad(accumImage, ivec2(gl_GlobalInvocationID.xy));
+#if 01
+  // 平均値をとって結果とする.
+  accum.xyz += color;
+  accum.w += 1;
+  vec4 result = accum / accum.w;
+
+  // 計算あふれしないよう定期的に圧縮.
+  if (accum.w > 1024)
+  {
+    accum.w *= 0.5;
+    accum.xyz *= 0.5;
+  }
+#else
+  vec4 result = vec4(color, 1);
+  result.xyz = mix(result.xyz, accum.xyz, 0.98);
+  accum = result;
+#endif
+
+  // 露出の処理.
+  result.xyz = pow(result.xyz, vec3(sceneParams.exposure));
+
+  imageStore(resultImage, ivec2(gl_GlobalInvocationID.xy), result);
+  imageStore(accumImage, ivec2(gl_GlobalInvocationID.xy), accum);
+
+  // 乱数状態保存
+  saveXorShift();
+}
