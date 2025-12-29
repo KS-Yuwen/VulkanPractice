@@ -547,19 +547,19 @@ void ClassicRaytraceApp::PrepareModelData()
 
     ModelData modelData{};
     loader::LoadModelDataFromFile(&modelData, modelFilePath);
-    m_modelResource = render::rt::ModelResource::CreateFromModelData(modelData, m_resourceUploader);
+    m_modelResource = Render::rt::ModelResource::CreateFromModelData(modelData, m_resourceUploader);
 
     // モデルジオメトリ情報をVRAMへ転送
     m_resourceUploader.SubmitAndWait();
 
-    m_drawObject = std::make_shared<render::rt::DrawObject>();
+    m_drawObject = std::make_shared<Render::rt::DrawObject>();
     m_drawObject->Initialize(m_modelResource, glm::mat4(1.0));
 
     // 全てのマテリアル情報を記録した配列・バッファを用意
     size_t bufferSize;
-    std::vector<render::rt::DrawObject::RaytraceMaterial> materialList;
+    std::vector<Render::rt::DrawObject::RaytraceMaterial> materialList;
     materialList = m_drawObject->GetMaterials();
-    bufferSize = sizeof(render::rt::DrawObject::RaytraceMaterial) * materialList.size();
+    bufferSize = sizeof(Render::rt::DrawObject::RaytraceMaterial) * materialList.size();
     m_materialBuffer = StorageBuffer::Create(bufferSize, StorageBuffer::AccessMode::CPUAccessible);
     if (void* p = m_materialBuffer->Map(); p != nullptr)
     {

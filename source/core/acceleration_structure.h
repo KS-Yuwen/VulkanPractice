@@ -9,7 +9,7 @@ class AccelerationStructure
 {
 public:
 	AccelerationStructure();
-	void Destory();
+	void Destroy();
 
 	struct Input {
 		std::vector<VkAccelerationStructureGeometryKHR> asGeometry;

@@ -5,7 +5,7 @@ AccelerationStructure::AccelerationStructure()
 {
 }
 
-void AccelerationStructure::Destory()
+void AccelerationStructure::Destroy()
 {
 	auto& vulkanCtx = VulkanContext::Get();
 	auto device = vulkanCtx.GetVkDevice();

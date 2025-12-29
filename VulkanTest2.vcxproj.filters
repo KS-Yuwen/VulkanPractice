@@ -49,6 +49,12 @@
     <Filter Include="Shaders\raytrace-pipeline">
       <UniqueIdentifier>{97eb1a42-6503-49d4-93a4-b6618e196025}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Render\rt">
+      <UniqueIdentifier>{3d397d08-e190-402e-a4a3-527f3fb5c25e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Render\rt">
+      <UniqueIdentifier>{9248e17d-5d86-4016-8c74-3f8994704d4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\asset_path.cpp">
@@ -134,6 +140,12 @@
     </ClCompile>
     <ClCompile Include="source\core\shader_binding_table_builder.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\rt\model_resource_rt.cpp">
+      <Filter>ソース ファイル\Render\rt</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\rt\draw_object_rt.cpp">
+      <Filter>ソース ファイル\Render\rt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +238,12 @@
     </ClInclude>
     <ClInclude Include="source\core\shader_binding_table_builder.h">
       <Filter>ヘッダー ファイル\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\rt\model_resource_rt.h">
+      <Filter>ヘッダー ファイル\Render\rt</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\rt\draw_object_rt.h">
+      <Filter>ヘッダー ファイル\Render\rt</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

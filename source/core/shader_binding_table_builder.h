@@ -13,7 +13,7 @@ class ShaderBindingTableBuilder
 public:
 	ShaderBindingTableBuilder(VkPipeline rtPipeline, uint32_t totalShaderGroupCount);
 
-	ShaderBindingTableBuilder& AddShadowGroup(
+	ShaderBindingTableBuilder& AddShaderGroup(
 		RaytraceShaderGroupType type, uint32_t groupIndex,
 		const void* recordData = nullptr, size_t recordSize = 0);
 

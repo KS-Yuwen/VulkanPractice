@@ -155,6 +155,8 @@
     <ClCompile Include="source\Render\draw_object.cpp" />
     <ClCompile Include="source\Render\model_loader.cpp" />
     <ClCompile Include="source\Render\model_resource.cpp" />
+    <ClCompile Include="source\Render\rt\draw_object_rt.cpp" />
+    <ClCompile Include="source\Render\rt\model_resource_rt.cpp" />
     <ClCompile Include="source\simplecube_app.cpp" />
     <ClCompile Include="source\tessellation_app.cpp" />
     <ClCompile Include="source\texture_app.cpp" />
@@ -187,6 +189,8 @@
     <ClInclude Include="source\Render\model_data.h" />
     <ClInclude Include="source\Render\model_loader.h" />
     <ClInclude Include="source\Render\model_resource.h" />
+    <ClInclude Include="source\Render\rt\draw_object_rt.h" />
+    <ClInclude Include="source\Render\rt\model_resource_rt.h" />
     <ClInclude Include="source\simplecube_app.h" />
     <ClInclude Include="source\tessellation_app.h" />
     <ClInclude Include="source\texture_app.h" />

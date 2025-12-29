@@ -17,7 +17,7 @@ ShaderBindingTableBuilder::ShaderBindingTableBuilder(VkPipeline rtPipeline, uint
 	FetchShaderHandles();
 }
 
-ShaderBindingTableBuilder& ShaderBindingTableBuilder::AddShadowGroup(
+ShaderBindingTableBuilder& ShaderBindingTableBuilder::AddShaderGroup(
 	RaytraceShaderGroupType type, uint32_t groupIndex,
 	const void* recordData, size_t recordSize)
 {
