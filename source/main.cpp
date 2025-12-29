@@ -17,6 +17,7 @@
 #include "drawmodel_app.h"
 #include "tessellation_app.h"
 #include "compute_app.h"
+#include "raytrace_pipeline_app.h"
 
 namespace fs = std::filesystem;
 
@@ -123,6 +124,21 @@ void compute(GLFWwindow* window)
 	theApp.OnCleanup();
 }
 
+void classicRaytrace(GLFWwindow* window)
+{
+	ClassicRaytraceApp theApp{};
+	theApp.OnInitialize();
+	// メッセージループ処理
+	while (glfwWindowShouldClose(window) == GLFW_FALSE)
+	{
+		glfwPollEvents();
+		// 描画処理
+		theApp.OnDrawFrame();
+	}
+	// 終了処理
+	theApp.OnCleanup();
+}
+
 int APIENTRY WinMain(
 	_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -175,7 +191,8 @@ int APIENTRY WinMain(
 	//texture(window);
 	//drawModel(window);
 	//tessellation(window);
-	compute(window);
+	//compute(window);
+	classicRaytrace(window);
 
 	// 終了処理
 	vulkanCtx.Cleanup();
