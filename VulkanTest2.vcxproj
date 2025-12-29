@@ -150,6 +150,7 @@
     <ClCompile Include="source\core\vulkan_context.cpp" />
     <ClCompile Include="source\drawmodel_app.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\pathtrace_rayquery_app.cpp" />
     <ClCompile Include="source\raytrace_pipeline_app.cpp" />
     <ClCompile Include="source\Render\basic_pbr_render.cpp" />
     <ClCompile Include="source\Render\draw_object.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="source\core\texture_loader.h" />
     <ClInclude Include="source\core\vulkan_context.h" />
     <ClInclude Include="source\drawmodel_app.h" />
+    <ClInclude Include="source\pathtrace_rayquery_app.h" />
     <ClInclude Include="source\raytrace_pipeline_app.h" />
     <ClInclude Include="source\Render\basic_pbr_render.h" />
     <ClInclude Include="source\Render\draw_object.h" />
@@ -205,6 +207,12 @@
     <None Include="assets\shaders\computeshader\vectorAdd.comp" />
     <None Include="assets\shaders\cube\cube.frag" />
     <None Include="assets\shaders\cube\cube.vert" />
+    <None Include="assets\shaders\pathtrace-rayquery\copy_image.frag" />
+    <None Include="assets\shaders\pathtrace-rayquery\copy_image.frag.spv" />
+    <None Include="assets\shaders\pathtrace-rayquery\copy_image.vert" />
+    <None Include="assets\shaders\pathtrace-rayquery\copy_image.vert.spv" />
+    <None Include="assets\shaders\pathtrace-rayquery\shader.comp" />
+    <None Include="assets\shaders\pathtrace-rayquery\shader.comp.spv" />
     <None Include="assets\shaders\raytrace-pipeline\copy_image.frag" />
     <None Include="assets\shaders\raytrace-pipeline\copy_image.vert" />
     <None Include="assets\shaders\raytrace-pipeline\shader.rchit" />

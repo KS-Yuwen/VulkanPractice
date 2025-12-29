@@ -18,6 +18,7 @@
 #include "tessellation_app.h"
 #include "compute_app.h"
 #include "raytrace_pipeline_app.h"
+#include "pathtrace_rayquery_app.h"
 
 namespace fs = std::filesystem;
 
@@ -139,6 +140,21 @@ void classicRaytrace(GLFWwindow* window)
 	theApp.OnCleanup();
 }
 
+void pathTraceRayQuery(GLFWwindow* window)
+{
+	PathtraceApp theApp{};
+	theApp.OnInitialize();
+	// メッセージループ処理
+	while (glfwWindowShouldClose(window) == GLFW_FALSE)
+	{
+		glfwPollEvents();
+		// 描画処理
+		theApp.OnDrawFrame();
+	}
+	// 終了処理
+	theApp.OnCleanup();
+}
+
 int APIENTRY WinMain(
 	_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -192,7 +208,8 @@ int APIENTRY WinMain(
 	//drawModel(window);
 	//tessellation(window);
 	//compute(window);
-	classicRaytrace(window);
+	//classicRaytrace(window);
+	pathTraceRayQuery(window);
 
 	// 終了処理
 	vulkanCtx.Cleanup();
