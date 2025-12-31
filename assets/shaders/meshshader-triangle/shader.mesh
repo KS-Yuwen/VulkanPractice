@@ -1,0 +1,64 @@
+#version 460
+#extension GL_EXT_shader_explicit_arithmetic_types : enable
+#extension GL_EXT_mesh_shader : enable
+
+layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
+
+// アライメント・パディングに注意.
+struct Vertex {
+  vec4 position;
+  vec4 color;
+};
+layout(set=0, binding=0,std430) buffer VertexBuffer { Vertex vertexData[]; } vb;
+layout(set=0, binding=1,std430) buffer IndexBuffer { uint32_t indexData[]; } ib;
+
+// 出力プリミティブは3角形に設定.
+layout(triangles, max_vertices = 3, max_primitives = 1) out;
+
+// 頂点毎に出力したい情報.
+layout(location=0) out VertexOutput
+{
+  vec4 color;
+} vertexOutput[];
+
+void main()
+{
+  int triangleCount = 1;
+  int vertexCount = 3;
+  // ワークグループあたり出力するメッシュ情報数をセット.
+  SetMeshOutputsEXT(vertexCount, triangleCount);
+#if 0
+  if(gl_LocalInvocationID.x == 0)
+  {
+    // 頂点情報を出力.
+    gl_MeshVerticesEXT[0].gl_Position = vec4( 0.5, -0.5, 0.0, 1.0);
+    gl_MeshVerticesEXT[1].gl_Position = vec4( 0.0,  0.5, 0.0, 1.0);
+    gl_MeshVerticesEXT[2].gl_Position = vec4(-0.5, -0.5, 0.0, 1.0);
+    // 頂点属性:カラー情報を出力.
+    vertexOutput[0].color = vec4(1.0, 0.0, 0.0, 1.0);
+    vertexOutput[1].color = vec4(0.0, 1.0, 0.0, 1.0);
+    vertexOutput[2].color = vec4(0.0, 0.0, 1.0, 1.0);
+
+    // インデックス情報を出力.
+    gl_PrimitiveTriangleIndicesEXT[0] =  uvec3(0, 1, 2);
+  }
+#endif
+  if (gl_LocalInvocationID.x < vertexCount )
+  {
+    uint vindex = gl_LocalInvocationID.x;
+    // 頂点位置を出力.
+    gl_MeshVerticesEXT[vindex].gl_Position = vb.vertexData[vindex].position;
+    // 頂点属性:カラー情報を出力.
+    vertexOutput[vindex].color = vb.vertexData[vindex].color;
+  }
+  if (gl_LocalInvocationID.x < triangleCount)
+  {
+    // インデックス情報を出力.
+    uint iindex = gl_LocalInvocationID.x;
+    uint idx0 = ib.indexData[3*iindex + 0];
+    uint idx1 = ib.indexData[3*iindex + 1];
+    uint idx2 = ib.indexData[3*iindex + 2];
+    gl_PrimitiveTriangleIndicesEXT[iindex] = uvec3(idx0, idx1, idx2);
+  }
+}
+

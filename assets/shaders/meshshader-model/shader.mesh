@@ -1,0 +1,124 @@
+#version 460
+#extension GL_EXT_mesh_shader : enable
+#extension GL_EXT_buffer_reference : enable
+#extension GL_EXT_shader_explicit_arithmetic_types : enable
+#extension GL_EXT_scalar_block_layout : enable
+
+layout(local_size_x = 128, local_size_y = 1, local_size_z = 1) in;
+
+// 出力プリミティブは3角形に設定.
+layout(triangles, max_vertices = 64, max_primitives = 124) out;
+
+// 頂点毎に出力したい情報.
+layout(location=0) out VertexOutput
+{
+  vec3 normal;
+  vec2 uv0;
+  vec4 color;
+  vec3 tangent;
+  vec3 binormal;
+  vec3 worldPos;
+  flat uint32_t materialIndex;
+} vertexOutput[];
+
+// std430レイアウト、要素アライメント:4によるbuffer_referenceのタイプを宣言
+layout(buffer_reference, std430, buffer_reference_align=4,scalar) readonly buffer Vector2 { vec2 v[]; };
+layout(buffer_reference, std430, buffer_reference_align=4,scalar) readonly buffer Vector3 { vec3 v[]; };
+
+struct MeshletInfo{
+  uint32_t vertexOffset;
+  uint32_t triangleOffset;
+  uint32_t vertexCount;
+  uint32_t triangleCount;
+
+  Vector3 positionBuffer;
+  Vector3 normalBuffer;
+  Vector2 uv0Buffer;
+  Vector3 tangentBuffer;
+  Vector3 binormalBuffer;
+  uint32_t materialIndex;
+  uint32_t _padd0;
+};
+
+layout(buffer_reference, std430, buffer_reference_align=4,scalar) readonly buffer Meshlet { MeshletInfo m[]; };
+layout(buffer_reference, std430, buffer_reference_align=4,scalar) readonly buffer MeshletVertexBuffer { uint32_t v[]; };
+layout(buffer_reference, std430, buffer_reference_align=1,scalar) readonly buffer MeshletPrimitiveIndexBuffer { uint8_t i[]; };
+
+
+layout(set=0,binding=0) uniform SceneParameters
+{
+  mat4 mtxView;
+  mat4 mtxProj;
+  vec4 toLightDir;
+  vec3 eyePosition;
+  float exposure;
+} sceneParams;
+
+layout(push_constant) uniform constants
+{
+  mat4 mtxWorld;
+
+  Meshlet meshlets;
+  MeshletVertexBuffer meshletVertexBuffer;
+  MeshletPrimitiveIndexBuffer meshletPrimitiveIndexBuffer;
+} PushConstants;
+
+void main()
+{
+  uint meshletIndex = gl_WorkGroupID.x;  // meshlet情報のインデックスとして使う.
+  MeshletInfo meshletInfo = PushConstants.meshlets.m[meshletIndex];
+  
+  SetMeshOutputsEXT(meshletInfo.vertexCount, meshletInfo.triangleCount);
+
+  uint index = gl_LocalInvocationIndex;
+  if (index < meshletInfo.triangleCount)
+  {
+    uint offset = meshletInfo.triangleOffset + index * 3;
+    uint8_t i0 = PushConstants.meshletPrimitiveIndexBuffer.i[offset];
+    uint8_t i1 = PushConstants.meshletPrimitiveIndexBuffer.i[offset+1];
+    uint8_t i2 = PushConstants.meshletPrimitiveIndexBuffer.i[offset+2];
+    gl_PrimitiveTriangleIndicesEXT[index] =  uvec3(i0, i1, i2);
+  }
+
+  if (index < meshletInfo.vertexCount)
+  {
+    uint offset = meshletInfo.vertexOffset + index;
+    uint vertexIndex = PushConstants.meshletVertexBuffer.v[offset];
+
+    // メッシュレットで使用する頂点を取り出して座標変換
+    vec4 position = vec4(meshletInfo.positionBuffer.v[vertexIndex], 1);
+    mat4 mtxWorld = PushConstants.mtxWorld;
+    vec4 worldPosition = mtxWorld * position;
+    vec4 positionPVW = sceneParams.mtxProj * sceneParams.mtxView * worldPosition;
+    gl_MeshVerticesEXT[index].gl_Position = positionPVW;
+
+    // 頂点属性情報を処理.
+    vec3 normal = meshletInfo.normalBuffer.v[vertexIndex];
+    vec3 normalW = mat3(mtxWorld) * normal;
+    vec2 uv0 = meshletInfo.uv0Buffer.v[vertexIndex];
+    vec3 tangentW = mat3(mtxWorld) * meshletInfo.tangentBuffer.v[vertexIndex];
+    vec3 binormalW = mat3(mtxWorld) * meshletInfo.binormalBuffer.v[vertexIndex];
+
+    vertexOutput[index].normal = normalW;
+    vertexOutput[index].uv0 = uv0;
+    vertexOutput[index].color = vec4(1);
+    vertexOutput[index].tangent = tangentW;
+    vertexOutput[index].binormal = binormalW;
+    vertexOutput[index].worldPos = worldPosition.xyz;
+
+    vertexOutput[index].materialIndex = meshletInfo.materialIndex;
+
+#if 0 // 各メッシュレットごとに着色したいときに有効化.
+    const vec4 constcolors[5] = {
+      vec4(0.5, 0.0, 0.0, 1.0),
+      vec4(0.0, 0.5, 0.0, 1.0),
+      vec4(0.0, 0.0, 0.5, 1.0),
+      vec4(0.5, 0.5, 0.5, 1.0),
+      vec4(0.5, 0.0, 0.5, 1.0),
+    };
+
+    vertexOutput[index].color = constcolors[meshletIndex % 5];
+  #endif
+  }
+}
+
