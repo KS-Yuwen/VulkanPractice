@@ -20,6 +20,7 @@
 #include "raytrace_pipeline_app.h"
 #include "pathtrace_rayquery_app.h"
 #include "meshshader_triangle_app.h"
+#include "meshshader_model_app.h"
 
 namespace fs = std::filesystem;
 
@@ -171,6 +172,21 @@ void meshShaderTriangle(GLFWwindow* window)
 	theApp.OnCleanup();
 }
 
+void meshShaderModel(GLFWwindow* window)
+{
+	MeshShaderModelApp theApp{};
+	theApp.OnInitialize();
+	// メッセージループ処理
+	while (glfwWindowShouldClose(window) == GLFW_FALSE)
+	{
+		glfwPollEvents();
+		// 描画処理
+		theApp.OnDrawFrame();
+	}
+	// 終了処理
+	theApp.OnCleanup();
+}
+
 int APIENTRY WinMain(
 	_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -226,7 +242,8 @@ int APIENTRY WinMain(
 	//compute(window);
 	//classicRaytrace(window);
 	//pathTraceRayQuery(window);
-	meshShaderTriangle(window);
+	//meshShaderTriangle(window);
+	meshShaderModel(window);
 
 	// 終了処理
 	vulkanCtx.Cleanup();

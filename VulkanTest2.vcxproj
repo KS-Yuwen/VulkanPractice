@@ -103,13 +103,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_FORCE_RADIANS;VK_NO_PROTOTYPES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm;E:\stb;C:\Assimp\include;F:\VulkanTest2\VulkanTest2\volk-1.4.304</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\include;C:\glfw-3.4\include;C:\glm;E:\stb;C:\Assimp\include;F:\VulkanTest2\VulkanTest2\volk-1.4.304;F:\VulkanTest2\VulkanTest2\meshoptimizer-1.0\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(VULKAN_SDK)\lib;C:\glfw-3.4\lib-vc2022;C:\Assimp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;opengl32.lib;assimp-vc145-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(VULKAN_SDK)\lib;C:\glfw-3.4\lib-vc2022;C:\Assimp\lib;F:\VulkanTest2\VulkanTest2\meshoptimizer-1.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;opengl32.lib;assimp-vc145-mtd.lib;meshoptimizer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,6 +150,7 @@
     <ClCompile Include="source\core\vulkan_context.cpp" />
     <ClCompile Include="source\drawmodel_app.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\meshshader_model_app.cpp" />
     <ClCompile Include="source\meshshader_triangle_app.cpp" />
     <ClCompile Include="source\pathtrace_rayquery_app.cpp" />
     <ClCompile Include="source\raytrace_pipeline_app.cpp" />
@@ -157,6 +158,9 @@
     <ClCompile Include="source\Render\draw_object.cpp" />
     <ClCompile Include="source\Render\model_loader.cpp" />
     <ClCompile Include="source\Render\model_resource.cpp" />
+    <ClCompile Include="source\Render\ms\basic_pbr_render_ms.cpp" />
+    <ClCompile Include="source\Render\ms\draw_object_ms.cpp" />
+    <ClCompile Include="source\Render\ms\model_resource_ms.cpp" />
     <ClCompile Include="source\Render\rt\draw_object_rt.cpp" />
     <ClCompile Include="source\Render\rt\model_resource_rt.cpp" />
     <ClCompile Include="source\simplecube_app.cpp" />
@@ -185,6 +189,7 @@
     <ClInclude Include="source\core\texture_loader.h" />
     <ClInclude Include="source\core\vulkan_context.h" />
     <ClInclude Include="source\drawmodel_app.h" />
+    <ClInclude Include="source\meshshader_model_app.h" />
     <ClInclude Include="source\meshshader_triangle_app.h" />
     <ClInclude Include="source\pathtrace_rayquery_app.h" />
     <ClInclude Include="source\raytrace_pipeline_app.h" />
@@ -193,6 +198,9 @@
     <ClInclude Include="source\Render\model_data.h" />
     <ClInclude Include="source\Render\model_loader.h" />
     <ClInclude Include="source\Render\model_resource.h" />
+    <ClInclude Include="source\Render\ms\basic_pbr_render_ms.h" />
+    <ClInclude Include="source\Render\ms\draw_object_ms.h" />
+    <ClInclude Include="source\Render\ms\model_resource_ms.h" />
     <ClInclude Include="source\Render\rt\draw_object_rt.h" />
     <ClInclude Include="source\Render\rt\model_resource_rt.h" />
     <ClInclude Include="source\simplecube_app.h" />
@@ -209,6 +217,8 @@
     <None Include="assets\shaders\computeshader\vectorAdd.comp" />
     <None Include="assets\shaders\cube\cube.frag" />
     <None Include="assets\shaders\cube\cube.vert" />
+    <None Include="assets\shaders\meshshader-model\shader.frag" />
+    <None Include="assets\shaders\meshshader-model\shader.mesh" />
     <None Include="assets\shaders\meshshader-triangle\shader.frag" />
     <None Include="assets\shaders\meshshader-triangle\shader.mesh" />
     <None Include="assets\shaders\pathtrace-rayquery\copy_image.frag" />

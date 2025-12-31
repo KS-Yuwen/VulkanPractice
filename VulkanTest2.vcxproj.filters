@@ -61,6 +61,15 @@
     <Filter Include="Shaders\meshshader-triangle">
       <UniqueIdentifier>{ebb9ae3c-b063-4a0d-9bc0-def05079e896}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Render\ms">
+      <UniqueIdentifier>{03a443ca-c74e-4fb3-ba19-9880743a9c67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Render\ms">
+      <UniqueIdentifier>{5999d2ad-4fb2-4b0f-8634-efb8e3f979ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\meshshader-model">
+      <UniqueIdentifier>{056cbabf-18ce-4b6a-ad65-964d57fa3d07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\asset_path.cpp">
@@ -120,12 +129,6 @@
     <ClCompile Include="source\Render\basic_pbr_render.cpp">
       <Filter>ソース ファイル\Render</Filter>
     </ClCompile>
-    <ClCompile Include="source\Render\model_resource.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Render\draw_object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\drawmodel_app.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -138,13 +141,7 @@
     <ClCompile Include="source\core\single_header_impl.cpp">
       <Filter>ソース ファイル\core</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\acceleration_structure.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="source\raytrace_pipeline_app.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="source\core\shader_binding_table_builder.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\Render\rt\model_resource_rt.cpp">
@@ -157,6 +154,30 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\meshshader_triangle_app.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\ms\draw_object_ms.cpp">
+      <Filter>ソース ファイル\Render\ms</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\draw_object.cpp">
+      <Filter>ソース ファイル\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\model_resource.cpp">
+      <Filter>ソース ファイル\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\acceleration_structure.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\shader_binding_table_builder.cpp">
+      <Filter>ソース ファイル\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\ms\model_resource_ms.cpp">
+      <Filter>ソース ファイル\Render\ms</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Render\ms\basic_pbr_render_ms.cpp">
+      <Filter>ソース ファイル\Render\ms</Filter>
+    </ClCompile>
+    <ClCompile Include="source\meshshader_model_app.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -263,6 +284,18 @@
     <ClInclude Include="source\meshshader_triangle_app.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\Render\ms\model_resource_ms.h">
+      <Filter>ヘッダー ファイル\Render\ms</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\ms\draw_object_ms.h">
+      <Filter>ヘッダー ファイル\Render\ms</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Render\ms\basic_pbr_render_ms.h">
+      <Filter>ヘッダー ファイル\Render\ms</Filter>
+    </ClInclude>
+    <ClInclude Include="source\meshshader_model_app.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\triangle\triangle.frag">
@@ -354,6 +387,12 @@
     </None>
     <None Include="assets\shaders\meshshader-triangle\shader.mesh">
       <Filter>Shaders\meshshader-triangle</Filter>
+    </None>
+    <None Include="assets\shaders\meshshader-model\shader.frag">
+      <Filter>Shaders\meshshader-model</Filter>
+    </None>
+    <None Include="assets\shaders\meshshader-model\shader.mesh">
+      <Filter>Shaders\meshshader-model</Filter>
     </None>
   </ItemGroup>
 </Project>
