@@ -382,6 +382,9 @@ void VulkanContext::CreateLogicalDevice()
 	// 上下方向を合わせるために有効とする
 	deviceExtensions.push_back(VK_KHR_MAINTENANCE1_EXTENSION_NAME);
 
+	// メッシュシェーダーを使う
+	deviceExtensions.push_back(VK_EXT_MESH_SHADER_EXTENSION_NAME);
+
 	// レイトレーシングパイプライン用有効化の宣言
 	deviceExtensions.push_back(VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME);
 	deviceExtensions.push_back(VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME);
@@ -576,6 +579,10 @@ void VulkanContext::BuildVkFeatures()
 	// 機能を有効化
 	m_vulkan13Features.dynamicRendering = VK_TRUE;
 	m_vulkan13Features.synchronization2 = VK_TRUE;
+
+	// メッシュシェーダー有効
+	m_meshShaderFeatures.meshShader = VK_TRUE;
+	m_meshShaderFeatures.primitiveFragmentShadingRateMeshShader = VK_FALSE;
 
 	// レイトレーシングパイプライン有効
 	m_raytracingPipelineFeatures.rayTracingPipeline = VK_TRUE;

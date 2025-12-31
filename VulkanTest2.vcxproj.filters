@@ -58,6 +58,9 @@
     <Filter Include="Shaders\pathtrace-rayquery">
       <UniqueIdentifier>{7f45216f-e29e-4407-a3c9-f9068f6e4120}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\meshshader-triangle">
+      <UniqueIdentifier>{ebb9ae3c-b063-4a0d-9bc0-def05079e896}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\asset_path.cpp">
@@ -151,6 +154,9 @@
       <Filter>ソース ファイル\Render\rt</Filter>
     </ClCompile>
     <ClCompile Include="source\pathtrace_rayquery_app.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\meshshader_triangle_app.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -254,6 +260,9 @@
     <ClInclude Include="source\pathtrace_rayquery_app.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\meshshader_triangle_app.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\triangle\triangle.frag">
@@ -339,6 +348,12 @@
     </None>
     <None Include="assets\shaders\pathtrace-rayquery\shader.comp.spv">
       <Filter>Shaders\pathtrace-rayquery</Filter>
+    </None>
+    <None Include="assets\shaders\meshshader-triangle\shader.frag">
+      <Filter>Shaders\meshshader-triangle</Filter>
+    </None>
+    <None Include="assets\shaders\meshshader-triangle\shader.mesh">
+      <Filter>Shaders\meshshader-triangle</Filter>
     </None>
   </ItemGroup>
 </Project>
